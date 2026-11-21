@@ -79,6 +79,7 @@ La mamá elige grado y toca **"Lo tengo"** en los libros del catálogo que quier
 - Cada publicación tiene estado: **Disponible / Reservado / Vendido**, y se puede quitar.
 - Si un libro ya se vendió, puede publicar otro ejemplar ("Tengo otro").
 - Muestra cuántas mamás buscan cada libro (`wants`) y el precio de referencia del admin.
+- Barra flotante con "Ver quién los necesita →" que lleva a `#/coincidencias/vendo`.
 
 Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/SellModel.js` → `views/SellView.js` → `controllers/SellController.js`.
 
@@ -87,12 +88,13 @@ Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/Sel
 La mamá marca, grado por grado, los libros que necesita y toca **Guardar**.
 - La selección es local hasta guardar; al guardar se agregan/quitan solo los cambios (`wants`).
 - Muestra cuántas OTRAS mamás tienen cada libro disponible.
-- "Ver quién los tiene →" guarda lo pendiente y lleva a `#/coincidencias`.
+- "Ver quién los tiene →" guarda lo pendiente y lleva a `#/coincidencias/busco`.
 - Si sale sin guardar y vuelve, conserva lo marcado; al cerrar la pestaña avisa.
 
 Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.
 
-**Pendiente:** `#/coincidencias` (`MatchesController`/`MatchesView`) — ranking de mamás que tienen más libros de mi lista.
+**Pendiente:** coincidencias (`MatchesController`/`MatchesView`), en dos modos:
+`#/coincidencias/busco` (qué mamá tiene más libros de mi lista) y `#/coincidencias/vendo` (qué mamás necesitan más de mis libros).
 
 ## Modelo de datos (Supabase)
 

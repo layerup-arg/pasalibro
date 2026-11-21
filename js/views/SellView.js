@@ -18,6 +18,7 @@ const STATUS_OPTIONS = [
  *   'offer' {id}                 publicar libro (id = book id)
  *   'status' {id, status}        cambiar estado (id = offer id)
  *   'remove' {id, title}         quitar publicación (id = offer id)
+ *   'matches'                    ir a coincidencias (quién necesita mis libros)
  */
 export class SellView extends View {
   template(s) {
@@ -36,7 +37,8 @@ export class SellView extends View {
       ${s.notice ? `<div class="notice" role="status">✓ ${esc(s.notice)}</div>` : ''}
 
       ${this.#tabs(s.grades, s.gradeId)}
-      ${this.#bookPanel(s)}`;
+      ${this.#bookPanel(s)}
+      ${this.#bar(s)}`;
   }
 
   afterRender({ editingPhone }) {
@@ -115,6 +117,22 @@ export class SellView extends View {
             </button>`}
         </div>
       </li>`;
+  }
+
+  /** Barra flotante: cuántos libros ofrezco + ir a coincidencias. */
+  #bar({ openCount, busyBookId }) {
+    return `
+      <div class="action-bar">
+        <div class="bar-info">
+          <strong>${openCount} ${openCount === 1 ? 'libro publicado' : 'libros publicados'}</strong>
+          <span class="muted">${openCount ? 'Se guarda solo' : 'Tocá "Lo tengo" para publicar'}</span>
+        </div>
+        <div class="bar-buttons">
+          <button class="btn btn-primary sm" data-action="matches" ${!openCount || busyBookId ? 'disabled' : ''}>
+            Ver quién los necesita →
+          </button>
+        </div>
+      </div>`;
   }
 
   #statusControl(offer, book, busy) {

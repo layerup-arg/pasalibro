@@ -63,7 +63,7 @@ export class SearchController extends Controller {
     this.view.onAction('discard', () => m.discard());
     // Ir a las coincidencias: primero guarda lo pendiente para que la otra pantalla vea la lista real.
     this.view.onAction('matches', async () => {
-      if (await m.save()) location.hash = '#/coincidencias';
+      if (await m.save()) location.hash = '#/coincidencias/busco';
     });
   }
 
