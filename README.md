@@ -53,6 +53,40 @@ Usuario ─click─▶ View ─onAction─▶ Controller ─llama─▶ Model �
 2. `js/repositories/NombreRepository.js` con los métodos de lectura/escritura.
 3. Instanciarlo en `App.js` dentro de `this.repos`.
 
+## Modelo de datos (Supabase)
+
+Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`.
+
+| Tabla | Qué guarda | Quién escribe |
+|---|---|---|
+| `schools` | Escuela + código de invitación | admin (SQL) |
+| `profiles` | Nombre de cada usuaria (se crea solo al entrar con Google) | la propia usuaria |
+| `profile_contact` | WhatsApp — **privado**, solo lo ve la dueña | la propia usuaria |
+| `school_members` | Quién pertenece a cada escuela y con qué rol (`admin`/`member`) | vía `join_school()` |
+| `grades` | Grados de cada escuela | admin |
+| `books` | Catálogo por grado: título + precio estimado | admin |
+| `offers` | "Vendo": libro del catálogo que ofrece una mamá (`available`/`reserved`/`sold`) | la vendedora |
+| `wants` | "Busco": libros que necesita una mamá | la propia usuaria |
+| `contacts` | Registro de cada "Me interesa" | vía `contact_offer()` |
+
+**Reglas (RLS):**
+- Grupo cerrado: todo se ve solo si sos miembro de esa escuela. Sin login no se ve nada.
+- Grados y libros: los ven los miembros, los editan solo admins.
+- Cada mamá crea y borra solo sus propios "vendo" y "busco".
+- El WhatsApp nunca se lee directo: `contact_offer(id)` registra el contacto y recién ahí lo devuelve.
+
+**Funciones que llama la app (RPC):**
+- `join_school(p_code)` → se une a la escuela con el código de invitación.
+- `contact_offer(p_offer)` → "Me interesa": devuelve nombre y WhatsApp de la vendedora y el título.
+
+**Hacer admin a alguien** (SQL Editor):
+```sql
+update school_members set role = 'admin'
+where user_id = (select id from auth.users where email = 'mail@ejemplo.com');
+```
+
+**Probar las reglas en local** (Postgres 16): `supabase/tests/run.sh`.
+
 ## Probar en local
 
 Los módulos ES no funcionan abriendo el archivo con doble click (`file://`). Hay que servirlo:
