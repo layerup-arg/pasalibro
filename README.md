@@ -17,7 +17,8 @@ js/
   App.js                → arma todo: cliente, repositorios, modelos, layout y rutas
   config.js             → URLs y claves (único lugar)
   core/                 → piezas base reutilizables (no tocar seguido)
-    ApiClient.js        → habla HTTP con Supabase (select/insert/update/upsert/remove)
+    ApiClient.js        → habla HTTP con Supabase (select/insert/update/upsert/remove/rpc)
+    AuthClient.js       → login con Google vía Supabase Auth (tokens, renovación, salir)
     EventEmitter.js     → patrón observador (on/off/emit)
     Model.js            → base de modelos: estado + evento 'change'
     View.js             → base de vistas: template() + render() + onAction()
@@ -52,6 +53,15 @@ Usuario ─click─▶ View ─onAction─▶ Controller ─llama─▶ Model �
 1. Script SQL en `supabase/00X_nombre.sql` (siempre con RLS y políticas) y correrlo en el SQL Editor de Supabase.
 2. `js/repositories/NombreRepository.js` con los métodos de lectura/escritura.
 3. Instanciarlo en `App.js` dentro de `this.repos`.
+
+## Login
+
+- Solo **Google** (Supabase Auth → proveedor Google, credenciales en Google Cloud proyecto `pasalibro`).
+- `AuthClient.init()` corre antes del router: Google vuelve con `#access_token=...` en la URL.
+- `SessionModel` decide el estado: `anonymous` → portada · `needs_school` → `#/unirme` (código) · `ready` → panel.
+- Mientras la app de Google esté en modo **Prueba**, solo entran los mails cargados como *usuarios de prueba*
+  (Google Cloud → Google Auth Platform → Público). Para abrirla a todos hay que publicar la app
+  (requiere página de política de privacidad).
 
 ## Modelo de datos (Supabase)
 

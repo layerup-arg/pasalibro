@@ -15,11 +15,18 @@ export class ApiClient {
   #baseUrl;
   #key;
   #timeoutMs;
+  #getToken;
 
-  constructor({ url, key, timeoutMs = 7000 }) {
+  /**
+   * @param {object} opts
+   * @param {() => Promise<string|null>} [opts.getToken] devuelve el token de la usuaria logueada.
+   *        Si no hay sesión, se usa la clave pública (rol anónimo).
+   */
+  constructor({ url, key, timeoutMs = 7000, getToken = async () => null }) {
     this.#baseUrl = `${url}/rest/v1`;
     this.#key = key;
     this.#timeoutMs = timeoutMs;
+    this.#getToken = getToken;
   }
 
   get isConfigured() {
@@ -54,14 +61,20 @@ export class ApiClient {
     return this.#request('DELETE', table, { query: filter, prefer: 'return=minimal' });
   }
 
+  /** Llama a una función de la base (RPC), ej: rpc('join_school', { p_code: 'ABC' }) */
+  rpc(fn, args = {}) {
+    return this.#request('POST', `rpc/${fn}`, { body: args });
+  }
+
   // ------------------------------------------------------------------
   async #request(method, table, { query = {}, body, prefer } = {}) {
     const url = new URL(`${this.#baseUrl}/${table}`);
     Object.entries(query).forEach(([k, v]) => url.searchParams.set(k, v));
 
+    const token = await this.#getToken();
     const headers = {
       apikey: this.#key,
-      Authorization: `Bearer ${this.#key}`,
+      Authorization: `Bearer ${token || this.#key}`,
       'Content-Type': 'application/json',
     };
     if (prefer) headers.Prefer = prefer;

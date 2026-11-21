@@ -41,6 +41,8 @@ export class View {
   }
 
   #dispatch = (event) => {
+    // Si una vista interna ya manejó el evento, la vista contenedora (layout) no lo repite.
+    if (event.defaultPrevented) return;
     const el = event.target.closest('[data-action]');
     if (!el || !this.root.contains(el)) return;
     const isForm = el.tagName === 'FORM';

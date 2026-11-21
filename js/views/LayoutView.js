@@ -4,6 +4,7 @@ import { esc } from '../utils/html.js';
 /**
  * Esqueleto fijo de la página: header, zona central (#view) y footer.
  * Las pantallas se dibujan dentro de #view.
+ * Acciones que emite: 'logout'.
  */
 export class LayoutView extends View {
   template({ appName }) {
@@ -13,7 +14,10 @@ export class LayoutView extends View {
           <div class="brand-mark">📚</div>
           <div class="brand-name">Pasa<span>Libro</span></div>
         </a>
-        <div class="school-chip" id="school-chip">Tu escuela</div>
+        <div class="top-right">
+          <div class="school-chip" id="school-chip">Tu escuela</div>
+          <div id="user-area"></div>
+        </div>
       </header>
 
       <main id="view"></main>
@@ -31,5 +35,16 @@ export class LayoutView extends View {
 
   setSchoolName(name) {
     this.root.querySelector('#school-chip').textContent = name || 'Tu escuela';
+  }
+
+  /** @param {{fullName: string}|null} user */
+  setUser(user) {
+    const area = this.root.querySelector('#user-area');
+    if (!user) { area.innerHTML = ''; return; }
+    const initial = esc((user.fullName || '?').trim().charAt(0).toUpperCase());
+    area.innerHTML = `
+      <button class="avatar" data-action="logout" title="Salir (${esc(user.fullName)})" aria-label="Cerrar sesión">
+        ${initial}
+      </button>`;
   }
 }
