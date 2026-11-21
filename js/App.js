@@ -7,14 +7,17 @@ import { ConfigRepository } from './repositories/ConfigRepository.js';
 import { VersionRepository } from './repositories/VersionRepository.js';
 import { ProfileRepository } from './repositories/ProfileRepository.js';
 import { SchoolRepository } from './repositories/SchoolRepository.js';
+import { CatalogRepository } from './repositories/CatalogRepository.js';
 
 import { AppStatusModel } from './models/AppStatusModel.js';
 import { SessionModel } from './models/SessionModel.js';
+import { CatalogAdminModel } from './models/CatalogAdminModel.js';
 
 import { LayoutView } from './views/LayoutView.js';
 
 import { HomeController } from './controllers/HomeController.js';
 import { JoinController } from './controllers/JoinController.js';
+import { AdminController } from './controllers/AdminController.js';
 import { NotFoundController } from './controllers/NotFoundController.js';
 
 /**
@@ -39,6 +42,7 @@ export class App {
       version: new VersionRepository(CONFIG.github),
       profiles: new ProfileRepository(this.api),
       schools: new SchoolRepository(this.api),
+      catalog: new CatalogRepository(this.api),
     };
 
     // Modelos compartidos
@@ -53,6 +57,7 @@ export class App {
         profileRepo: this.repos.profiles,
         schoolRepo: this.repos.schools,
       }),
+      catalogAdmin: new CatalogAdminModel(this.repos.catalog),
     };
   }
 
@@ -78,9 +83,10 @@ export class App {
   }
 
   #registerRoutes() {
-    const { session, status } = this.models;
+    const { session, status, catalogAdmin } = this.models;
     this.router.add('/', () => new HomeController({ session, status }));
     this.router.add('/unirme', () => new JoinController({ session }));
+    this.router.add('/admin', () => new AdminController({ session, catalog: catalogAdmin }));
   }
 
   #syncLayout(session) {

@@ -100,7 +100,6 @@ export class HomeView extends View {
           <span class="step-ico i3">🛠️</span>
           <strong>Administrar</strong>
           <small>Grados y lista de libros</small>
-          <span class="soon">pronto</span>
         </button>` : ''}
       </div>`;
   }

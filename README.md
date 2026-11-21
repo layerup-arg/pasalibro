@@ -63,6 +63,15 @@ Usuario ─click─▶ View ─onAction─▶ Controller ─llama─▶ Model �
   (Google Cloud → Google Auth Platform → Público). Para abrirla a todos hay que publicar la app
   (requiere página de política de privacidad).
 
+## Administrar (#/admin)
+
+Solo para quien tiene rol `admin` en `school_members`. Permite, por escuela:
+- elegir el grado (pestañas) y crear grados nuevos;
+- agregar libros de a uno o pegando una lista (una línea por libro, precio opcional después de `;`);
+- editar título y precio estimado, ocultar/mostrar a las familias y borrar.
+
+Archivos: `repositories/CatalogRepository.js` → `models/CatalogAdminModel.js` → `views/AdminView.js` → `controllers/AdminController.js`.
+
 ## Modelo de datos (Supabase)
 
 Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`.
