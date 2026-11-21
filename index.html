@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>PasaLibro · Intercambio de libros escolares</title>
+<meta name="description" content="PasaLibro: comprá, vendé e intercambiá los libros escolares entre las familias de tu escuela.">
+<meta name="theme-color" content="#1F2A44">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#FBF7EF;--paper2:#F3ECDD;--ink:#1F2A44;--ink2:#4A5672;--muted:#8A8F9C;
+  --tomato:#E85D3F;--mustard:#F2B33D;--green:#2F8F6B;--sky:#3D7DD8;
+  --line:rgba(31,42,68,.08);--radius:18px;
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--line) 31px 32px);}
+.app{max-width:760px;margin:0 auto;padding:0 1.1rem 6rem}
+
+/* HEADER */
+.top{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0}
+.brand{display:flex;align-items:center;gap:.55rem;text-decoration:none;color:var(--ink)}
+.brand-mark{width:40px;height:40px;border-radius:12px;background:var(--ink);display:grid;place-items:center;font-size:22px;transform:rotate(-6deg);box-shadow:3px 3px 0 var(--mustard)}
+.brand-name{font-family:'Fraunces',serif;font-weight:800;font-size:1.45rem;letter-spacing:-.02em}
+.brand-name span{color:var(--tomato)}
+.school-chip{font-size:.78rem;font-weight:700;color:var(--ink2);background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:.35rem .8rem}
+
+/* HERO */
+.hero{position:relative;background:var(--ink);color:#fff;border-radius:26px;padding:2rem 1.5rem 1.8rem;overflow:hidden;margin-top:.4rem}
+.hero::before{content:"";position:absolute;left:22px;top:0;bottom:0;width:2px;background:rgba(232,93,63,.55)}
+.hero-stack{position:absolute;right:-8px;bottom:-6px;font-size:96px;opacity:.16;transform:rotate(-10deg);pointer-events:none}
+.hero h1{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(1.9rem,7vw,2.7rem);line-height:1.05;letter-spacing:-.02em;padding-left:1rem}
+.hero h1 em{font-style:normal;color:var(--mustard)}
+.hero p{margin-top:.8rem;color:rgba(255,255,255,.78);font-size:1.02rem;line-height:1.5;padding-left:1rem;max-width:30rem}
+.hero-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.4rem;padding-left:1rem}
+.btn{appearance:none;border:0;cursor:pointer;font-family:inherit;font-weight:800;font-size:.98rem;border-radius:14px;padding:.85rem 1.2rem;display:inline-flex;align-items:center;gap:.45rem;transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(2px)}
+.btn-primary{background:var(--tomato);color:#fff;box-shadow:0 4px 0 #b9442b}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.25)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.soon{font-size:.68rem;background:var(--mustard);color:var(--ink);border-radius:99px;padding:.1rem .45rem;font-weight:800}
+
+/* STEPS */
+.section-title{font-family:'Fraunces',serif;font-weight:800;font-size:1.35rem;margin:2.2rem 0 .9rem}
+.steps{display:grid;gap:.8rem}
+@media(min-width:620px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:#fff;border-radius:var(--radius);padding:1.1rem 1.1rem 1.2rem;border:1.5px solid var(--line);position:relative}
+.step-n{position:absolute;top:-10px;right:14px;font-family:'Fraunces',serif;font-weight:800;font-size:.85rem;background:var(--paper);border:1.5px solid var(--line);border-radius:99px;padding:.05rem .55rem;color:var(--ink2)}
+.step-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;margin-bottom:.7rem}
+.step h3{font-size:1.05rem;font-weight:800;margin-bottom:.25rem}
+.step p{font-size:.92rem;color:var(--ink2);line-height:1.45}
+.i1{background:#FDE6DF}.i2{background:#FCF0D2}.i3{background:#DDF0E8}
+
+/* GRADES RIBBON */
+.grades{display:flex;gap:.4rem;overflow-x:auto;padding:.2rem 0 .6rem;scrollbar-width:none}
+.grades::-webkit-scrollbar{display:none}
+.grade{flex:0 0 auto;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:.55rem .8rem;font-weight:800;font-size:.9rem;color:var(--ink2)}
+.grade-arrow{flex:0 0 auto;align-self:center;color:var(--tomato);font-weight:800}
+
+/* STATUS CARD */
+.status{background:#fff;border:1.5px dashed rgba(31,42,68,.18);border-radius:var(--radius);padding:1rem 1.1rem;display:grid;gap:.55rem;font-size:.9rem}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.status-row span:first-child{color:var(--ink2);font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:.4rem;font-weight:800;font-size:.82rem;border-radius:99px;padding:.25rem .7rem;background:var(--paper2);color:var(--ink2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.pill.ok{background:#DDF0E8;color:#1E6B4F}.pill.ok .dot{background:var(--green)}
+.pill.err{background:#FDE6DF;color:#A33A22}.pill.err .dot{background:var(--tomato)}
+.pill.wait .dot{animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.25}}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;background:var(--paper2);padding:.1rem .4rem;border-radius:6px}
+
+footer{margin-top:2.5rem;text-align:center;color:var(--muted);font-size:.8rem;line-height:1.6}
+footer a{color:var(--ink2);font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <a class="brand" href="./" aria-label="PasaLibro inicio">
+      <div class="brand-mark">📚</div>
+      <div class="brand-name">Pasa<span>Libro</span></div>
+    </a>
+    <div class="school-chip" id="school-chip">Tu escuela</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-stack" aria-hidden="true">📚</div>
+    <h1>Los libros también <em>pasan de grado.</em></h1>
+    <p>Encontrá los libros que pide la escuela entre las familias del grado anterior, y pasale los tuyos a las del grado siguiente.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" disabled>🔎 Buscar libros <span class="soon">pronto</span></button>
+      <button class="btn btn-ghost" disabled>➕ Publicar un libro <span class="soon">pronto</span></button>
+    </div>
+  </section>
+
+  <h2 class="section-title">¿Cómo funciona?</h2>
+  <div class="steps">
+    <div class="step"><span class="step-n">1</span>
+      <div class="step-ico i1">📖</div>
+      <h3>Publicá</h3>
+      <p>Cargá los libros que tu hijo ya usó, con precio o para intercambiar.</p>
+    </div>
+    <div class="step"><span class="step-n">2</span>
+      <div class="step-ico i2">🔎</div>
+      <h3>Buscá</h3>
+      <p>Mirá la lista del grado de tu hijo y encontrá quién tiene cada libro.</p>
+    </div>
+    <div class="step"><span class="step-n">3</span>
+      <div class="step-ico i3">🤝</div>
+      <h3>Coordiná</h3>
+      <p>Contactá a la otra familia de la escuela y se pasan el libro.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">De un grado al siguiente</h2>
+  <div class="grades" aria-label="Grados">
+    <div class="grade">1°</div><div class="grade-arrow">→</div>
+    <div class="grade">2°</div><div class="grade-arrow">→</div>
+    <div class="grade">3°</div><div class="grade-arrow">→</div>
+    <div class="grade">4°</div><div class="grade-arrow">→</div>
+    <div class="grade">5°</div><div class="grade-arrow">→</div>
+    <div class="grade">6°</div><div class="grade-arrow">→</div>
+    <div class="grade">7°</div>
+  </div>
+
+  <h2 class="section-title">Estado del sistema</h2>
+  <div class="status">
+    <div class="status-row"><span>Base de datos</span><span class="pill wait" id="st-db"><span class="dot"></span><span>Conectando…</span></span></div>
+    <div class="status-row"><span>Escuela</span><span id="st-school"><code>—</code></span></div>
+    <div class="status-row"><span>Versión</span><span id="st-ver"><code>…</code></span></div>
+  </div>
+
+  <footer>
+    PasaLibro · hecho con 💛 por <a href="https://layerup-arg.github.io/" target="_blank" rel="noopener">LayerUp</a>
+  </footer>
+</div>
+
+<script>
+'use strict';
+
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPA_URL = 'https://ncodklvyclrcshlxeqqp.supabase.co';
+const SUPA_KEY = 'sb_publishable_RoQBQYM2PDpux0g0cORU3Q_66dAofT0';
+const GH_REPO  = 'layerup-arg/pasalibro';
+
+// ============================================================
+// SUPABASE DB LAYER (REST, mismo esquema que el prode)
+// ============================================================
+const DB = {
+  _h(extra = {}) {
+    return { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}`, ...extra };
+  },
+  async _fetch(path, opts = {}) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 7000);
+    try {
+      const r = await fetch(`${SUPA_URL}/rest/v1/${path}`, { ...opts, signal: ctrl.signal });
+      clearTimeout(t);
+      return r;
+    } catch (e) { clearTimeout(t); throw e; }
+  },
+  async loadConfig() {
+    const r = await this._fetch('pasalibro_config?select=key,value', { headers: this._h() });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const rows = await r.json();
+    return Object.fromEntries(rows.map(x => [x.key, x.value]));
+  },
+};
+
+// ============================================================
+// UI helpers
+// ============================================================
+function setPill(id, kind, text) {
+  const el = document.getElementById(id);
+  el.className = `pill ${kind}`;
+  el.innerHTML = `<span class="dot"></span><span>${text}</span>`;
+}
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ============================================================
+// BOOT
+// ============================================================
+async function checkDB() {
+  if (!SUPA_KEY) { setPill('st-db', 'err', 'Sin configurar'); return; }
+  try {
+    const cfg = await DB.loadConfig();
+    setPill('st-db', 'ok', 'Conectada');
+    if (cfg.school_name) {
+      document.getElementById('school-chip').textContent = cfg.school_name;
+      document.getElementById('st-school').innerHTML = `<code>${esc(cfg.school_name)}</code>`;
+    }
+  } catch (e) {
+    console.error('[PasaLibro] DB', e);
+    setPill('st-db', 'err', 'Sin conexión');
+  }
+}
+
+async function checkVersion() {
+  const el = document.getElementById('st-ver');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GH_REPO}/commits/main`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const c = await r.json();
+    const d = new Date(c.commit.committer.date);
+    el.innerHTML = `<code>${c.sha.slice(0, 7)}</code> · ${d.toLocaleDateString('es-AR')}`;
+  } catch { el.innerHTML = '<code>local</code>'; }
+}
+
+checkDB();
+checkVersion();
+</script>
+</body>
+</html>
