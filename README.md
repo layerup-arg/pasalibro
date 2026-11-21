@@ -72,6 +72,16 @@ Solo para quien tiene rol `admin` en `school_members`. Permite, por escuela:
 
 Archivos: `repositories/CatalogRepository.js` → `models/CatalogAdminModel.js` → `views/AdminView.js` → `controllers/AdminController.js`.
 
+## Vendo (#/vendo)
+
+La mamá elige grado y toca **"Lo tengo"** en los libros del catálogo que quiere pasar.
+- Antes de publicar carga su WhatsApp una vez (`profile_contact`, privado). Se normaliza a `549…` (`utils/phone.js`).
+- Cada publicación tiene estado: **Disponible / Reservado / Vendido**, y se puede quitar.
+- Si un libro ya se vendió, puede publicar otro ejemplar ("Tengo otro").
+- Muestra cuántas mamás buscan cada libro (`wants`) y el precio de referencia del admin.
+
+Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/SellModel.js` → `views/SellView.js` → `controllers/SellController.js`.
+
 ## Modelo de datos (Supabase)
 
 Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`.

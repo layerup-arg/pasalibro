@@ -32,6 +32,27 @@ export class CatalogRepository {
     });
   }
 
+  /** Solo los libros visibles para las familias. */
+  getActiveBooks(gradeId) {
+    return this.api.select('books', {
+      select: 'id,title,estimated_price',
+      grade_id: `eq.${gradeId}`,
+      active: 'eq.true',
+      order: 'title.asc',
+    });
+  }
+
+  /** Cantidad de libros visibles por grado: { [gradeId]: cantidad } */
+  async countActiveByGrade(gradeIds) {
+    if (!gradeIds.length) return {};
+    const rows = await this.api.select('books', {
+      select: 'grade_id',
+      grade_id: `in.(${gradeIds.join(',')})`,
+      active: 'eq.true',
+    });
+    return rows.reduce((acc, r) => ({ ...acc, [r.grade_id]: (acc[r.grade_id] ?? 0) + 1 }), {});
+  }
+
   /** @param {Array<{title: string, estimated_price: number|null}>} books */
   addBooks(gradeId, books) {
     return this.api.insert('books', books.map(b => ({ grade_id: gradeId, ...b })));

@@ -93,7 +93,6 @@ export class HomeView extends View {
           <span class="step-ico i1">📖</span>
           <strong>Vendo libros</strong>
           <small>Publicá los que ya usaron</small>
-          <span class="soon">pronto</span>
         </button>
         ${isAdmin ? `
         <button class="action-card admin" data-action="admin">

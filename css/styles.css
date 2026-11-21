@@ -152,3 +152,25 @@ a.btn{text-decoration:none}
 .collapsible summary::-webkit-details-marker{display:none}
 .inline-form{display:flex;gap:.5rem}
 .inline-form .input{flex:1}
+
+/* VENDO */
+.page-lead{color:var(--ink2);margin-top:.2rem}
+.phone-line{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:.7rem 1rem;margin-bottom:1rem;font-size:.93rem}
+.phone-card{border-color:var(--mustard);box-shadow:3px 3px 0 var(--mustard)}
+.link-btn.inline{margin:0}
+.link-btn.small{font-size:.82rem}
+.tab{display:inline-flex;align-items:center;gap:.35rem}
+.tab.no-books{opacity:.5}
+.badge{background:var(--tomato);color:#fff;border-radius:99px;font-size:.72rem;min-width:20px;height:20px;padding:0 .35rem;display:inline-grid;place-items:center}
+.sell-row{flex-wrap:wrap}
+.sell-row.is-mine{background:#F3FAF6}
+.sell-actions{display:flex;align-items:center;gap:.6rem;flex:0 0 auto}
+@media(max-width:560px){.sell-actions{width:100%;justify-content:space-between}}
+.tag.hot{background:#FCF0D2;color:#8A5A00}
+.segmented{display:inline-flex;border:1.5px solid rgba(31,42,68,.18);border-radius:11px;overflow:hidden;background:#fff}
+.seg{font-family:inherit;font-weight:800;font-size:.8rem;padding:.45rem .65rem;border:0;background:transparent;color:var(--ink2);cursor:pointer}
+.seg+.seg{border-left:1.5px solid rgba(31,42,68,.12)}
+.seg.on.available{background:var(--green);color:#fff}
+.seg.on.reserved{background:var(--mustard);color:var(--ink)}
+.seg.on.sold{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
