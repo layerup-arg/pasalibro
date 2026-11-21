@@ -15,6 +15,7 @@ import { AppStatusModel } from './models/AppStatusModel.js';
 import { SessionModel } from './models/SessionModel.js';
 import { CatalogAdminModel } from './models/CatalogAdminModel.js';
 import { SellModel } from './models/SellModel.js';
+import { SearchModel } from './models/SearchModel.js';
 
 import { LayoutView } from './views/LayoutView.js';
 
@@ -22,6 +23,8 @@ import { HomeController } from './controllers/HomeController.js';
 import { JoinController } from './controllers/JoinController.js';
 import { AdminController } from './controllers/AdminController.js';
 import { SellController } from './controllers/SellController.js';
+import { SearchController } from './controllers/SearchController.js';
+import { MatchesController } from './controllers/MatchesController.js';
 import { NotFoundController } from './controllers/NotFoundController.js';
 
 /**
@@ -70,6 +73,11 @@ export class App {
         wantRepo: this.repos.wants,
         profileRepo: this.repos.profiles,
       }),
+      search: new SearchModel({
+        catalogRepo: this.repos.catalog,
+        wantRepo: this.repos.wants,
+        offerRepo: this.repos.offers,
+      }),
     };
   }
 
@@ -95,11 +103,13 @@ export class App {
   }
 
   #registerRoutes() {
-    const { session, status, catalogAdmin, sell } = this.models;
+    const { session, status, catalogAdmin, sell, search } = this.models;
     this.router.add('/', () => new HomeController({ session, status }));
     this.router.add('/unirme', () => new JoinController({ session }));
     this.router.add('/admin', () => new AdminController({ session, catalog: catalogAdmin }));
     this.router.add('/vendo', () => new SellController({ session, sell }));
+    this.router.add('/busco', () => new SearchController({ session, search }));
+    this.router.add('/coincidencias', () => new MatchesController({ session, search }));
   }
 
   #syncLayout(session) {

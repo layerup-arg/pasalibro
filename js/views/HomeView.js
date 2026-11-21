@@ -87,7 +87,6 @@ export class HomeView extends View {
           <span class="step-ico i2">🔎</span>
           <strong>Busco libros</strong>
           <small>Marcá los que necesitás</small>
-          <span class="soon">pronto</span>
         </button>
         <button class="action-card" data-action="publish">
           <span class="step-ico i1">📖</span>

@@ -19,6 +19,19 @@ export class OfferRepository {
     });
   }
 
+  /** Cuántas OTRAS mamás tienen disponible cada libro: { [bookId]: cantidad } */
+  async countAvailableByBooks(bookIds, excludeUserId) {
+    if (!bookIds.length) return {};
+    const rows = await this.api.select('offers', {
+      select: 'book_id,seller_id',
+      book_id: `in.(${bookIds.join(',')})`,
+      status: `eq.${OfferRepository.STATUS.AVAILABLE}`,
+    });
+    return rows
+      .filter(r => r.seller_id !== excludeUserId)
+      .reduce((acc, r) => ({ ...acc, [r.book_id]: (acc[r.book_id] ?? 0) + 1 }), {});
+  }
+
   async create(bookId) {
     const [row] = await this.api.insert('offers', { book_id: bookId });
     return row;

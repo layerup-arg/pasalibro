@@ -174,3 +174,20 @@ a.btn{text-decoration:none}
 .seg.on.reserved{background:var(--mustard);color:var(--ink)}
 .seg.on.sold{background:var(--ink);color:#fff}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* BUSCO */
+.pick-row{width:100%;display:flex;align-items:center;gap:.8rem;padding:.75rem 1.1rem;border:0;border-bottom:1px solid var(--line);background:#fff;font-family:inherit;color:var(--ink);text-align:left;cursor:pointer}
+.book-list li:last-child .pick-row{border-bottom:0}
+.pick-row:hover{background:#FFFBF2}
+.pick-row.on{background:#FFF4EF}
+.check{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:2px solid rgba(31,42,68,.25);display:grid;place-items:center;font-weight:800;color:#fff;transition:background .12s,border-color .12s}
+.pick-row.on .check{background:var(--tomato);border-color:var(--tomato)}
+.tag.ok{background:#DDF0E8;color:#1E6B4F}
+.action-bar{position:sticky;bottom:.8rem;z-index:5;margin-top:1rem;background:var(--ink);color:#fff;border-radius:18px;padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;box-shadow:0 10px 30px rgba(31,42,68,.25)}
+.bar-info{display:grid;gap:.1rem;font-size:.92rem}
+.bar-info .muted{color:rgba(255,255,255,.6)}
+.bar-warn{color:var(--mustard);font-size:.85rem;font-weight:700}
+.action-bar .link-btn{color:#fff}
+.bar-buttons{display:flex;gap:.5rem}
+.action-bar .btn-light{background:rgba(255,255,255,.12);color:#fff}
+@media(max-width:560px){.bar-buttons{width:100%}.bar-buttons .btn{flex:1;justify-content:center}}

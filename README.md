@@ -82,6 +82,18 @@ La mamá elige grado y toca **"Lo tengo"** en los libros del catálogo que quier
 
 Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/SellModel.js` → `views/SellView.js` → `controllers/SellController.js`.
 
+## Busco (#/busco)
+
+La mamá marca, grado por grado, los libros que necesita y toca **Guardar**.
+- La selección es local hasta guardar; al guardar se agregan/quitan solo los cambios (`wants`).
+- Muestra cuántas OTRAS mamás tienen cada libro disponible.
+- "Ver quién los tiene →" guarda lo pendiente y lleva a `#/coincidencias`.
+- Si sale sin guardar y vuelve, conserva lo marcado; al cerrar la pestaña avisa.
+
+Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.
+
+**Pendiente:** `#/coincidencias` (`MatchesController`/`MatchesView`) — ranking de mamás que tienen más libros de mi lista.
+
 ## Modelo de datos (Supabase)
 
 Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`.
