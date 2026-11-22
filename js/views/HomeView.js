@@ -85,7 +85,7 @@ export class HomeView extends View {
       <div class="actions-grid">
         <button class="action-card" data-action="search">
           <span class="step-ico i2">🔎</span>
-          <strong>Busco libros</strong>
+          <strong>Compro libros</strong>
           <small>Marcá los que necesitás</small>
         </button>
         <button class="action-card" data-action="publish">
