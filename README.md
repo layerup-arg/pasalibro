@@ -67,8 +67,12 @@ Usuario ─click─▶ View ─onAction─▶ Controller ─llama─▶ Model �
 
 Solo para quien tiene rol `admin` en `school_members`. Permite, por escuela:
 - elegir el grado (pestañas) y crear grados nuevos;
-- agregar libros de a uno o pegando una lista (una línea por libro, precio opcional después de `;`);
-- editar título y precio estimado, ocultar/mostrar a las familias y borrar.
+- agregar libros de a uno o pegando una lista: una línea por libro, `título ; autor ; editorial ; precio`
+  (solo el título es obligatorio; también acepta tabs si se pega desde una planilla, y el formato viejo `título ; precio`);
+- editar título, autor, editorial y precio estimado, ocultar/mostrar a las familias y borrar.
+
+La tarjeta de libro es igual en Administrar, Vendo y Busco (`views/bookInfo.js`):
+título arriba, autor · editorial abajo, precio de referencia a la derecha.
 
 Archivos: `repositories/CatalogRepository.js` → `models/CatalogAdminModel.js` → `views/AdminView.js` → `controllers/AdminController.js`.
 
@@ -105,7 +109,7 @@ Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `view
 
 ## Modelo de datos (Supabase)
 
-Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`.
+Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`, `005_autor_editorial.sql`.
 
 | Tabla | Qué guarda | Quién escribe |
 |---|---|---|
@@ -114,7 +118,7 @@ Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `00
 | `profile_contact` | WhatsApp — **privado**, solo lo ve la dueña | la propia usuaria |
 | `school_members` | Quién pertenece a cada escuela y con qué rol (`admin`/`member`) | vía `join_school()` |
 | `grades` | Grados de cada escuela | admin |
-| `books` | Catálogo por grado: título + precio estimado | admin |
+| `books` | Catálogo por grado: título, autor, editorial y precio estimado | admin |
 | `offers` | "Vendo": libro del catálogo que ofrece una mamá (`available`/`reserved`/`sold`) | la vendedora |
 | `wants` | "Busco": libros que necesita una mamá | la propia usuaria |
 | `contacts` | Registro de cada "Me interesa" | vía `contact_offer()` |

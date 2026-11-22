@@ -61,7 +61,7 @@ export class AdminController extends Controller {
     v().onAction('add-books', async ({ text }) => { if (await c.addBooks(text)) v().clearDraft('text'); });
     v().onAction('edit', ({ id }) => c.startEdit(id));
     v().onAction('cancel-edit', () => c.cancelEdit());
-    v().onAction('save-book', ({ id, title, price }) => c.saveBook(id, { title, price }));
+    v().onAction('save-book', ({ id, title, author, publisher, price }) => c.saveBook(id, { title, author, publisher, price }));
     v().onAction('toggle', ({ id }) => c.toggleActive(id));
     v().onAction('delete', ({ id, title }) => {
       const ok = confirm(`¿Borrar "${title}"?\n\nTambién se borran las publicaciones de las familias para este libro. Si solo querés que no aparezca, usá "Ocultar".`);

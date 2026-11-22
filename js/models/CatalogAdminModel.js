@@ -58,9 +58,11 @@ export class CatalogAdminModel extends Model {
 
   // ---------- Libros ----------
   /**
-   * Agrega uno o varios libros. Una línea por libro; el precio es opcional después de ";".
+   * Agrega uno o varios libros. Una línea por libro, campos separados por ";":
+   *   título ; autor ; editorial ; precio     (solo el título es obligatorio)
    *   "El Equipo de Mate 3"
-   *   "El Equipo de Mate 3 ; 25000"
+   *   "El Nombre Secreto ; Fulana ; Editorial Sur ; 25000"
+   *   "El Equipo de Mate 3 ; 25000"            (formato viejo: título ; precio, sigue andando)
    */
   async addBooks(text) {
     const { books, gradeId } = this.state;
@@ -99,7 +101,7 @@ export class CatalogAdminModel extends Model {
     this.setState({ editingId: null });
   }
 
-  async saveBook(id, { title, price }) {
+  async saveBook(id, { title, author, publisher, price }) {
     const cleanTitle = String(title ?? '').trim();
     const estimated_price = parsePrice(price);
     if (!cleanTitle) return this.#error('El título no puede quedar vacío.');
@@ -108,7 +110,12 @@ export class CatalogAdminModel extends Model {
     if (dup) return this.#error('Ya hay otro libro con ese título en este grado.');
 
     try {
-      await this.repo.updateBook(id, { title: cleanTitle, estimated_price });
+      await this.repo.updateBook(id, {
+        title: cleanTitle,
+        author: CatalogAdminModel.clean(author),
+        publisher: CatalogAdminModel.clean(publisher),
+        estimated_price,
+      });
       this.setState({ editingId: null, notice: 'Cambios guardados', error: null });
       await this.#loadBooks();
     } catch (err) {
@@ -158,19 +165,40 @@ export class CatalogAdminModel extends Model {
   }
 
   // ---------- Helpers ----------
-  /** Separa el texto pegado en { items: [{title, estimated_price}], invalid: [títulos con precio mal] } */
+  /**
+   * Separa el texto pegado en { items: [{title, author, publisher, estimated_price}], invalid: [títulos con precio mal] }
+   * Formato por línea: título ; autor ; editorial ; precio  (también acepta tabs, por si se pega desde una planilla)
+   */
   static parseLines(text) {
     const items = [];
     const invalid = [];
     String(text ?? '').split(/\r?\n/).forEach(line => {
-      const [rawTitle, rawPrice] = line.split(/[;\t]/);
-      const title = (rawTitle ?? '').replace(/^\s*[-•*·]\s*/, '').trim();
+      const parts = line.split(/[;\t]/).map(p => p.trim());
+      const title = (parts[0] ?? '').replace(/^\s*[-•*·]\s*/, '').trim();
       if (!title) return;
+
+      let [, author = '', publisher = '', rawPrice = ''] = parts;
+      // Formato viejo "título ; precio": si hay solo 2 campos y el segundo es un número, es el precio.
+      if (parts.length === 2 && author && !Number.isNaN(parsePrice(author))) {
+        rawPrice = author;
+        author = '';
+      }
       const estimated_price = parsePrice(rawPrice);
-      if (Number.isNaN(estimated_price)) invalid.push(title);
-      else items.push({ title, estimated_price });
+      if (Number.isNaN(estimated_price)) { invalid.push(title); return; }
+      items.push({
+        title,
+        author: CatalogAdminModel.clean(author),
+        publisher: CatalogAdminModel.clean(publisher),
+        estimated_price,
+      });
     });
     return { items, invalid };
+  }
+
+  /** Texto opcional: vacío → null. */
+  static clean(value) {
+    const v = String(value ?? '').trim();
+    return v || null;
   }
 
   #error(message) {

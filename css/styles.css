@@ -201,3 +201,18 @@ a.btn{text-decoration:none}
 .member-avatar.admin{background:var(--ink);color:#fff;box-shadow:2px 2px 0 var(--mustard)}
 .tag.role-admin{background:var(--ink);color:#fff}
 .member-row[hidden]{display:none}
+
+/* TARJETA DE LIBRO (común a Administrar, Vendo y Busco)
+   fila 1: título .................. precio
+   fila 2: autor · editorial
+   fila 3: etiquetas (opcional) */
+.book-main{flex:1;min-width:0}
+.book-info{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:.8rem;row-gap:.15rem;align-items:baseline;width:100%}
+.book-info .book-title{grid-column:1;grid-row:1}
+.book-price{grid-column:2;grid-row:1;justify-self:end;font-weight:800;font-size:.95rem;color:var(--ink);white-space:nowrap}
+.book-price.none{font-weight:600;font-size:.8rem;color:var(--muted);font-style:italic}
+.book-byline{grid-column:1/-1;font-size:.85rem;color:var(--ink2);line-height:1.35}
+.book-tags{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.2rem}
+.book-row.is-hidden .book-price{color:var(--muted)}
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media(max-width:480px){.edit-grid{grid-template-columns:1fr}}

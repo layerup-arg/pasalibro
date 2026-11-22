@@ -1,7 +1,7 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
-import { formatPrice } from '../utils/format.js';
 import { formatArPhone } from '../utils/phone.js';
+import { bookInfo } from './bookInfo.js';
 
 const STATUS_OPTIONS = [
   { value: 'available', label: 'Disponible' },
@@ -102,12 +102,10 @@ export class SellView extends View {
     return `
       <li class="book-row sell-row ${open ? 'is-mine' : ''}">
         <div class="book-main">
-          <span class="book-title">${esc(book.title)}</span>
-          <span class="book-meta">
-            ${book.estimated_price !== null ? `Referencia ${formatPrice(book.estimated_price)}` : ''}
-            ${wanted ? `<span class="tag hot">${wanted} ${wanted === 1 ? 'lo busca' : 'lo buscan'}</span>` : ''}
-            ${offer?.status === 'sold' ? '<span class="tag">ya vendiste uno</span>' : ''}
-          </span>
+          ${bookInfo(book, { tags: [
+            wanted ? `<span class="tag hot">${wanted} ${wanted === 1 ? 'lo busca' : 'lo buscan'}</span>` : '',
+            offer?.status === 'sold' ? '<span class="tag">ya vendiste uno</span>' : '',
+          ].join('') })}
         </div>
         <div class="sell-actions">
           ${open ? this.#statusControl(offer, book, busy) : `

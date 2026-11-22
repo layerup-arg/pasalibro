@@ -1,6 +1,6 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
-import { formatPrice } from '../utils/format.js';
+import { bookInfo } from './bookInfo.js';
 
 /**
  * Pantalla "Busco".
@@ -66,13 +66,9 @@ export class SearchView extends View {
                 role="checkbox" aria-checked="${on}">
           <span class="check" aria-hidden="true">${on ? '✓' : ''}</span>
           <span class="book-main">
-            <span class="book-title">${esc(book.title)}</span>
-            <span class="book-meta">
-              ${book.estimated_price !== null ? `Referencia ${formatPrice(book.estimated_price)}` : ''}
-              ${available
-                ? `<span class="tag ok">${available} ${available === 1 ? 'mamá lo tiene' : 'mamás lo tienen'}</span>`
-                : '<span class="tag">nadie lo ofrece todavía</span>'}
-            </span>
+            ${bookInfo(book, { tags: available
+              ? `<span class="tag ok">${available} ${available === 1 ? 'mamá lo tiene' : 'mamás lo tienen'}</span>`
+              : '<span class="tag">nadie lo ofrece todavía</span>' })}
           </span>
         </button>
       </li>`;
