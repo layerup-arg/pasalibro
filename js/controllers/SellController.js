@@ -58,8 +58,6 @@ export class SellController extends Controller {
     this.view.onAction('offer', ({ id }) => m.offer(id));
     this.view.onAction('status', ({ id, status }) => m.setStatus(id, status));
     this.view.onAction('matches', () => { location.hash = '#/coincidencias/vendo'; });
-    this.view.onAction('remove', ({ id, title }) => {
-      if (confirm(`¿Quitar "${title}" de tus publicaciones?`)) m.remove(id);
-    });
+    this.view.onAction('remove', ({ id }) => m.remove(id));
   }
 }

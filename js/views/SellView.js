@@ -17,7 +17,7 @@ const STATUS_OPTIONS = [
  *   'grade' {id}
  *   'offer' {id}                 publicar libro (id = book id)
  *   'status' {id, status}        cambiar estado (id = offer id)
- *   'remove' {id, title}         quitar publicación (id = offer id)
+ *   'remove' {id}                quitar publicación (id = offer id)
  *   'matches'                    ir a coincidencias (quién necesita mis libros)
  */
 export class SellView extends View {
@@ -140,6 +140,6 @@ export class SellView extends View {
           <button class="seg ${offer.status === o.value ? 'on' : ''} ${o.value}" data-action="status"
                   data-id="${offer.id}" data-status="${o.value}" ${busy ? 'disabled' : ''}>${o.label}</button>`).join('')}
       </div>
-      <button class="link-btn inline small" data-action="remove" data-id="${offer.id}" data-title="${esc(book.title)}" ${busy ? 'disabled' : ''}>Quitar</button>`;
+      <button class="link-btn inline small" data-action="remove" data-id="${offer.id}" ${busy ? 'disabled' : ''}>Quitar</button>`;
   }
 }
