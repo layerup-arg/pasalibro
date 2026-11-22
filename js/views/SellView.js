@@ -1,6 +1,5 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
-import { formatPrice } from '../utils/format.js';
 import { formatArPhone } from '../utils/phone.js';
 import { bookInfo } from './bookInfo.js';
 
@@ -94,10 +93,7 @@ export class SellView extends View {
         </div>
         ${loading ? '<p class="muted pad">Cargando…</p>'
           : !books.length ? '<p class="muted pad">La escuela todavía no cargó libros para este grado.</p>'
-          : `<div class="sell-head" aria-hidden="true">
-               <span>Libro</span><span class="num">Buscados</span><span class="num">Precio de referencia</span>
-             </div>
-             <ul class="book-list">${books.map(b => this.#row(b, offerByBook[b.id], wantCounts[b.id], busyBookId === b.id, canPublish)).join('')}</ul>`}
+          : `<ul class="book-list">${books.map(b => this.#row(b, offerByBook[b.id], wantCounts[b.id], busyBookId === b.id, canPublish)).join('')}</ul>`}
       </section>`;
   }
 
@@ -106,14 +102,11 @@ export class SellView extends View {
     return `
       <li class="book-row sell-row ${open ? 'is-mine' : ''}">
         <div class="book-main">
-          ${bookInfo(book, {
-            showPrice: false,
-            tags: offer?.status === 'sold' ? '<span class="tag">ya vendiste uno</span>' : '',
-          })}
+          ${bookInfo(book, { tags: [
+            wanted ? `<span class="tag hot">${wanted} ${wanted === 1 ? 'lo busca' : 'lo buscan'}</span>` : '',
+            offer?.status === 'sold' ? '<span class="tag">ya vendiste uno</span>' : '',
+          ].join('') })}
         </div>
-        <div class="sell-col num ${wanted ? 'hot' : 'zero'}" data-label="Buscados"
-             title="${wanted} ${wanted === 1 ? 'familia lo busca' : 'familias lo buscan'}">${wanted}</div>
-        <div class="sell-col num price" data-label="Precio de referencia">${hasPrice(book) ? formatPrice(book.estimated_price) : '—'}</div>
         <div class="sell-actions">
           ${open ? this.#statusControl(offer, book, busy) : `
             <button class="btn btn-primary sm" data-action="offer" data-id="${book.id}"
@@ -149,8 +142,4 @@ export class SellView extends View {
       </div>
       <button class="link-btn inline small" data-action="remove" data-id="${offer.id}" ${busy ? 'disabled' : ''}>Quitar</button>`;
   }
-}
-
-function hasPrice(book) {
-  return book.estimated_price !== null && book.estimated_price !== undefined;
 }

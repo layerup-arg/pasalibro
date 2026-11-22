@@ -162,24 +162,10 @@ a.btn{text-decoration:none}
 .tab{display:inline-flex;align-items:center;gap:.35rem}
 .tab.no-books{opacity:.5}
 .badge{background:var(--tomato);color:#fff;border-radius:99px;font-size:.72rem;min-width:20px;height:20px;padding:0 .35rem;display:inline-grid;place-items:center}
-/* Vendo: tabla Libro | Buscados | Precio de referencia | acciones */
-.sell-head,.sell-row{display:grid;grid-template-columns:minmax(0,1fr) 6rem 10rem;column-gap:1rem;row-gap:.5rem;align-items:center}
-.sell-head{padding:.55rem 1.1rem;border-bottom:1px solid var(--line);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-.sell-head .num,.sell-col.num{text-align:right}
+.sell-row{flex-wrap:wrap}
 .sell-row.is-mine{background:#F3FAF6}
-.sell-col{font-weight:800;font-size:.95rem;white-space:nowrap}
-.sell-col.hot{color:#8A5A00}
-.sell-col.zero{color:var(--muted);font-weight:600}
-.sell-actions{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;gap:.6rem}
-@media(max-width:860px){
-  .sell-head{display:none}
-  .sell-row{grid-template-columns:1fr 1fr;row-gap:.45rem}
-  .sell-row .book-main{grid-column:1/-1}
-  .sell-col.num{text-align:left;font-size:.88rem}
-  .sell-col::before{content:attr(data-label) ": ";font-weight:600;color:var(--muted);font-size:.8rem}
-  .sell-col.price{text-align:right}
-  .sell-actions{grid-column:1/-1;justify-content:space-between}
-}
+.sell-actions{display:flex;align-items:center;gap:.6rem;flex:0 0 auto}
+@media(max-width:560px){.sell-actions{width:100%;justify-content:space-between}}
 .tag.hot{background:#FCF0D2;color:#8A5A00}
 .segmented{display:inline-flex;border:1.5px solid rgba(31,42,68,.18);border-radius:11px;overflow:hidden;background:#fff}
 .seg{font-family:inherit;font-weight:800;font-size:.8rem;padding:.45rem .65rem;border:0;background:transparent;color:var(--ink2);cursor:pointer}
