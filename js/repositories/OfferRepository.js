@@ -45,4 +45,9 @@ export class OfferRepository {
   remove(offerId) {
     return this.api.remove('offers', { id: `eq.${offerId}` });
   }
+
+  /** Borra todas mis publicaciones de un libro (abiertas y vendidas): el libro queda "limpio". */
+  removeAllForBook(userId, bookId) {
+    return this.api.remove('offers', { seller_id: `eq.${userId}`, book_id: `eq.${bookId}` });
+  }
 }

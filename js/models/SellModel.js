@@ -163,13 +163,18 @@ export class SellModel extends Model {
     });
   }
 
+  /**
+   * "Quitar": el libro vuelve a quedar como si nunca lo hubiera cargado
+   * (también se borran las ventas anteriores de ese libro, así no muestra "ya vendiste uno").
+   */
   async remove(offerId) {
     const id = Number(offerId);
     const offer = this.state.offers.find(o => o.id === id);
     if (!offer) return;
-    await this.#run(offer.book_id, async () => {
-      await this.offerRepo.remove(id);
-      this.setState({ offers: this.state.offers.filter(o => o.id !== id), notice: 'Publicación quitada' });
+    const bookId = offer.book_id;
+    await this.#run(bookId, async () => {
+      await this.offerRepo.removeAllForBook(this.state.userId, bookId);
+      this.setState({ offers: this.state.offers.filter(o => o.book_id !== bookId), notice: 'Publicación quitada' });
     });
   }
 
