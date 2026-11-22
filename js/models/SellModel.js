@@ -132,7 +132,7 @@ export class SellModel extends Model {
   }
 
   // ---------- Publicaciones ----------
-  /** "Lo tengo": publica el libro (o lo vuelve a publicar si el anterior ya se vendió). */
+  /** "Lo vendo": publica el libro (o lo vuelve a publicar si el anterior ya se vendió). */
   async offer(bookId) {
     if (!this.canPublish) return this.#error('Primero cargá tu WhatsApp, así te pueden contactar.');
     const id = Number(bookId);

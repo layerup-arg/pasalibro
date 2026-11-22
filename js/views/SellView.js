@@ -111,7 +111,7 @@ export class SellView extends View {
           ${open ? this.#statusControl(offer, book, busy) : `
             <button class="btn btn-primary sm" data-action="offer" data-id="${book.id}"
                     ${busy || !canPublish ? 'disabled' : ''} title="${canPublish ? '' : 'Primero cargá tu WhatsApp'}">
-              ${busy ? '…' : offer ? 'Tengo otro' : 'Lo tengo'}
+              ${busy ? '…' : offer ? 'Vendo otro' : 'Lo vendo'}
             </button>`}
         </div>
       </li>`;
@@ -123,7 +123,7 @@ export class SellView extends View {
       <div class="action-bar">
         <div class="bar-info">
           <strong>${openCount} ${openCount === 1 ? 'libro publicado' : 'libros publicados'}</strong>
-          <span class="muted">${openCount ? 'Se guarda solo' : 'Tocá "Lo tengo" para publicar'}</span>
+          <span class="muted">${openCount ? 'Se guarda solo' : 'Tocá "Lo vendo" para publicar'}</span>
         </div>
         <div class="bar-buttons">
           <button class="btn btn-primary sm" data-action="matches" ${!openCount || busyBookId ? 'disabled' : ''}>

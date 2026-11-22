@@ -85,10 +85,10 @@ Archivos: `repositories/MemberRepository.js` → `models/MembersAdminModel.js` �
 
 ## Vendo (#/vendo)
 
-La mamá elige grado y toca **"Lo tengo"** en los libros del catálogo que quiere pasar.
+La mamá elige grado y toca **"Lo vendo"** en los libros del catálogo que quiere pasar.
 - Antes de publicar carga su WhatsApp una vez (`profile_contact`, privado). Se normaliza a `549…` (`utils/phone.js`).
 - Cada publicación tiene estado: **Disponible / Reservado / Vendido**, y se puede quitar.
-- Si un libro ya se vendió, puede publicar otro ejemplar ("Tengo otro").
+- Si un libro ya se vendió, puede publicar otro ejemplar ("Vendo otro").
 - Muestra cuántas mamás buscan cada libro (`wants`) y el precio de referencia del admin.
 - Barra flotante con "Ver quién los necesita →" que lleva a `#/coincidencias/vendo`.
 
