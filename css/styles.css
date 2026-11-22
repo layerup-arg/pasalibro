@@ -191,3 +191,13 @@ a.btn{text-decoration:none}
 .bar-buttons{display:flex;gap:.5rem}
 .action-bar .btn-light{background:rgba(255,255,255,.12);color:#fff}
 @media(max-width:560px){.bar-buttons{width:100%}.bar-buttons .btn{flex:1;justify-content:center}}
+
+/* ADMINISTRAR › secciones y miembros */
+.section-nav{display:flex;gap:.3rem;background:var(--paper2);border-radius:14px;padding:.3rem;margin-bottom:1rem;width:fit-content}
+.section-link{padding:.5rem 1rem;border-radius:11px;font-weight:800;font-size:.92rem;color:var(--ink2);text-decoration:none}
+.section-link.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(31,42,68,.12)}
+.filter-box{border-bottom:1px solid var(--line);padding-top:.8rem;padding-bottom:.8rem}
+.member-avatar{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--paper2);color:var(--ink2);display:grid;place-items:center;font-weight:800}
+.member-avatar.admin{background:var(--ink);color:#fff;box-shadow:2px 2px 0 var(--mustard)}
+.tag.role-admin{background:var(--ink);color:#fff}
+.member-row[hidden]{display:none}

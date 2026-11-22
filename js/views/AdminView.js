@@ -1,6 +1,7 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
 import { formatPrice } from '../utils/format.js';
+import { adminNav } from './adminNav.js';
 
 /**
  * Pantalla Administrar: grados de la escuela y libros de cada grado.
@@ -37,6 +38,7 @@ export class AdminView extends View {
         <h1 class="page-title">Administrar</h1>
         ${schools.length > 1 ? this.#schoolSelect(schools, schoolId) : `<p class="page-sub">${esc(school?.name ?? '')}</p>`}
       </div>
+      ${adminNav('libros')}
 
       ${this.#gradeTabs(grades, gradeId)}
 

@@ -72,6 +72,13 @@ Solo para quien tiene rol `admin` en `school_members`. Permite, por escuela:
 
 Archivos: `repositories/CatalogRepository.js` → `models/CatalogAdminModel.js` → `views/AdminView.js` → `controllers/AdminController.js`.
 
+### Administrar › Miembros (#/admin/miembros)
+Lista de quienes entraron a la escuela (por nombre de Google), con buscador y botones **Hacer admin / Quitar admin**.
+- La escuela nunca queda sin admin: la app deshabilita el botón y la base lo bloquea (`004_un_admin_minimo.sql`).
+- Si un admin se quita el rol a sí mismo, vuelve al inicio sin la tarjeta Administrar.
+
+Archivos: `repositories/MemberRepository.js` → `models/MembersAdminModel.js` → `views/MembersView.js` → `controllers/AdminMembersController.js` (+ `views/adminNav.js`).
+
 ## Vendo (#/vendo)
 
 La mamá elige grado y toca **"Lo tengo"** en los libros del catálogo que quiere pasar.
@@ -98,7 +105,7 @@ Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `view
 
 ## Modelo de datos (Supabase)
 
-Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`.
+Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`.
 
 | Tabla | Qué guarda | Quién escribe |
 |---|---|---|
@@ -122,7 +129,7 @@ Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `00
 - `join_school(p_code)` → se une a la escuela con el código de invitación.
 - `contact_offer(p_offer)` → "Me interesa": devuelve nombre y WhatsApp de la vendedora y el título.
 
-**Hacer admin a alguien** (SQL Editor):
+**Hacer admin a alguien:** desde la app, Administrar › Miembros. O por SQL Editor:
 ```sql
 update school_members set role = 'admin'
 where user_id = (select id from auth.users where email = 'mail@ejemplo.com');
