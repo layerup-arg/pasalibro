@@ -54,6 +54,15 @@ export class OfferRepository {
     });
   }
 
+  /**
+   * "Contactar": registra el contacto por estas publicaciones (todas del mismo vendedor)
+   * y devuelve { seller_name, whatsapp }. El WhatsApp es privado: solo se obtiene por acá.
+   */
+  async contactSeller(offerIds) {
+    const rows = await this.api.rpc('contact_seller', { p_offers: offerIds });
+    return rows?.[0] ?? null;
+  }
+
   async create(bookId) {
     const [row] = await this.api.insert('offers', { book_id: bookId });
     return row;

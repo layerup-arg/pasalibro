@@ -8,7 +8,8 @@ import { bookInfo } from './bookInfo.js';
  * Al tocar un usuario se abre un panel con sus libros: los que coinciden y los que no.
  *
  * Acciones que emite:
- *   'toggle' {id}   abrir/cerrar el panel de un usuario
+ *   'toggle' {id}    abrir/cerrar el panel de un usuario
+ *   'contact' {id}   iniciar contacto por WhatsApp con ese usuario
  */
 export class BuyMatchesView extends View {
   template(s) {
@@ -24,7 +25,7 @@ export class BuyMatchesView extends View {
       ${this.#body(s)}`;
   }
 
-  #body({ loading, myBooks, sellers, openId, gradeNames }) {
+  #body({ loading, myBooks, sellers, openId, gradeNames, contactingId }) {
     if (loading) return '<p class="muted pad">Buscando coincidencias…</p>';
     if (!myBooks.length) {
       return `
@@ -49,11 +50,11 @@ export class BuyMatchesView extends View {
       <p class="match-summary muted">Tu lista: <strong>${total} ${total === 1 ? 'libro' : 'libros'}</strong> ·
         ${sellers.length} ${sellers.length === 1 ? 'usuario tiene' : 'usuarios tienen'} alguno</p>
       <ul class="match-list">
-        ${sellers.map((s, i) => this.#seller(s, i, total, s.id === openId, gradeNames)).join('')}
+        ${sellers.map((s, i) => this.#seller(s, i, total, s.id === openId, gradeNames, contactingId)).join('')}
       </ul>`;
   }
 
-  #seller(s, index, total, open, gradeNames) {
+  #seller(s, index, total, open, gradeNames, contactingId) {
     const n = s.matches.length;
     const pct = Math.round((n / total) * 100);
     return `
@@ -69,11 +70,11 @@ export class BuyMatchesView extends View {
           <span class="match-count" title="Libros de tu lista que tiene">${n}<small>/${total}</small></span>
           <span class="chev" aria-hidden="true">${open ? '▴' : '▾'}</span>
         </button>
-        ${open ? this.#detail(s, gradeNames) : ''}
+        ${open ? this.#detail(s, gradeNames, contactingId === s.id) : ''}
       </li>`;
   }
 
-  #detail(s, gradeNames) {
+  #detail(s, gradeNames, contacting) {
     const list = (books, icon) => `
       <ul class="match-books">
         ${books.map(b => `
@@ -87,8 +88,15 @@ export class BuyMatchesView extends View {
         <h3 class="match-sec">${title} <span>${books.length}</span></h3>
         ${list(books, icon)}
       </section>`;
+    const n = s.matches.length;
     return `
       <div class="match-detail">
+        <div class="match-contact">
+          <button class="btn btn-wa" data-action="contact" data-id="${esc(s.id)}" ${contacting ? 'disabled' : ''}>
+            ${contacting ? 'Abriendo WhatsApp…' : `💬 Iniciar contacto por WhatsApp`}
+          </button>
+          <small>Le escribís a ${esc(s.name.split(' ')[0])} con un saludo y ${n === 1 ? 'el libro' : `los ${n} libros`} de tu lista que tiene.</small>
+        </div>
         ${section('yes', 'Tiene de tu lista', s.matches, '✓')}
         ${s.missing.length
           ? section('no', 'De tu lista no tiene', s.missing, '✗')

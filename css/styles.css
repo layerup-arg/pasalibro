@@ -260,3 +260,9 @@ a.btn{text-decoration:none}
 .match-box.other .mb-ico{background:var(--paper2);color:var(--ink2)}
 .match-all{padding:.7rem .9rem;font-weight:700;color:#1F6E4B;background:#E3F4EA;border-radius:12px}
 @media(max-width:480px){.match-rank{display:none}.match-head{gap:.6rem;padding:.8rem}}
+.match-contact{display:grid;gap:.4rem;justify-items:start;padding:.2rem .1rem .3rem}
+.match-contact small{color:var(--ink2);font-size:.82rem}
+.btn-wa{background:#25D366;color:#073B1E;border:0;box-shadow:0 3px 0 #179E4B;font-weight:800}
+.btn-wa:hover{background:#2FE072}
+.btn-wa:disabled{opacity:.7;cursor:progress}
+@media(max-width:480px){.btn-wa{width:100%;justify-content:center}}

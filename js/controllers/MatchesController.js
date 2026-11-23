@@ -32,6 +32,7 @@ export class MatchesController extends Controller {
     if (this.mode === 'busco') {
       this.view = new BuyMatchesView(container);
       this.view.onAction('toggle', ({ id }) => this.buyMatches.toggle(id));
+      this.view.onAction('contact', ({ id }) => this.#contact(id));
       this.listen(this.buyMatches, 'change', () => this.#render());
     } else {
       this.view = new MatchesView(container);
@@ -48,6 +49,19 @@ export class MatchesController extends Controller {
       this.buyMatches.load({ userId: user.id, schoolId: school.id });
     }
     this.#render();
+  }
+
+  /**
+   * Abre WhatsApp en una pestaña nueva. La pestaña se abre YA (dentro del click) para que
+   * el navegador no la bloquee, y se le pone la dirección cuando llega el número.
+   */
+  async #contact(sellerId) {
+    const tab = window.open('', '_blank');
+    const { fullName, school } = this.session.state;
+    const link = await this.buyMatches.contact(sellerId, { buyerName: fullName, schoolName: school?.name });
+    if (!link) { tab?.close(); return; }
+    if (tab) tab.location.href = link;
+    else location.href = link;
   }
 
   #render() {

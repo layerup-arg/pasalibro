@@ -112,13 +112,17 @@ ordenados por cuántos tienen (a igualdad, por monto de referencia). Tocar un us
 - ✗ los de mi lista que no tiene,
 - otros libros que también vende.
 
+**Iniciar contacto por WhatsApp** (arriba del panel): llama a `contact_seller(ids)` (SQL `007`), que registra
+un contacto por cada libro y devuelve el WhatsApp privado del vendedor. Se abre `wa.me` con un saludo
+y la lista de libros de mi lista que tiene.
+
 `OfferRepository.getSellersOf/getAvailableBySellers` + `WantRepository.getMineWithBooks` → `models/BuyMatchesModel.js` → `views/BuyMatchesView.js` → `controllers/MatchesController.js`.
 
-**Pendiente:** `#/coincidencias/vendo` (qué usuarios necesitan más de mis libros) y el contacto por WhatsApp.
+**Pendiente:** `#/coincidencias/vendo` (qué usuarios necesitan más de mis libros).
 
 ## Modelo de datos (Supabase)
 
-Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`, `005_autor_editorial.sql`.
+Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`, `005_autor_editorial.sql`, `006_listas_2027.sql`, `007_contactar_vendedor.sql`.
 
 | Tabla | Qué guarda | Quién escribe |
 |---|---|---|

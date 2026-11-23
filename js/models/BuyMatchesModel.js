@@ -1,4 +1,5 @@
 import { Model } from '../core/Model.js';
+import { whatsappLink } from '../utils/phone.js';
 
 /**
  * Coincidencias desde Compro (#/coincidencias/busco):
@@ -20,6 +21,7 @@ export class BuyMatchesModel extends Model {
       myBooks: [],      // libros de mi lista (de esta escuela)
       sellers: [],      // ver #buildSellers
       openId: null,     // usuario con el panel abierto
+      contactingId: null, // usuario al que se está contactando
     });
     this.catalogRepo = catalogRepo;
     this.wantRepo = wantRepo;
@@ -55,7 +57,43 @@ export class BuyMatchesModel extends Model {
 
   /** Abre el panel de un usuario (o lo cierra si ya estaba abierto). */
   toggle(sellerId) {
-    this.setState({ openId: this.state.openId === sellerId ? null : sellerId });
+    this.setState({ openId: this.state.openId === sellerId ? null : sellerId, error: null });
+  }
+
+  /**
+   * "Iniciar contacto": registra el contacto y devuelve el link de WhatsApp
+   * con un saludo y la lista de libros de mi lista que tiene ese vendedor.
+   * @returns {Promise<string|null>} link a wa.me, o null si falló (queda el error en el estado)
+   */
+  async contact(sellerId, { buyerName, schoolName }) {
+    const seller = this.state.sellers.find(s => s.id === sellerId);
+    if (!seller) return null;
+    this.setState({ contactingId: sellerId, error: null });
+    try {
+      const res = await this.offerRepo.contactSeller(seller.matches.map(b => b.offerId));
+      if (!res?.whatsapp) throw new Error(`${seller.name} no tiene un WhatsApp cargado.`);
+      const text = this.#message({ seller: res.seller_name || seller.name, books: seller.matches, buyerName, schoolName });
+      return whatsappLink(res.whatsapp, text);
+    } catch (err) {
+      console.error('[BuyMatchesModel]', err);
+      this.setState({ error: err.message || 'No pudimos iniciar el contacto.' });
+      return null;
+    } finally {
+      this.setState({ contactingId: null });
+    }
+  }
+
+  #message({ seller, books, buyerName, schoolName }) {
+    const first = s => (s || '').trim().split(/\s+/)[0];
+    const { gradeNames } = this.state;
+    return [
+      `¡Hola ${first(seller)}! Soy ${first(buyerName)}${schoolName ? `, de ${schoolName}` : ''}. 👋`,
+      `Vi en PasaLibro que tenés estos libros que estoy buscando:`,
+      '',
+      ...books.map(b => `• ${b.title}${gradeNames[b.grade_id] ? ` (${gradeNames[b.grade_id]})` : ''}`),
+      '',
+      `¿Siguen disponibles? ¡Gracias!`,
+    ].join('\n');
   }
 
   /**
@@ -71,7 +109,7 @@ export class BuyMatchesModel extends Model {
       if (!bySeller.has(o.seller_id)) {
         bySeller.set(o.seller_id, { id: o.seller_id, name: o.seller?.full_name || 'Usuario', books: new Map() });
       }
-      bySeller.get(o.seller_id).books.set(o.book.id, o.book);
+      bySeller.get(o.seller_id).books.set(o.book.id, { ...o.book, offerId: o.id });
     }
 
     return [...bySeller.values()]
