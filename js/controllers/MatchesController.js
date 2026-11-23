@@ -33,7 +33,7 @@ export class MatchesController extends Controller {
     const { status } = this.session.state;
     if (status === SessionModel.STATUS.LOADING) return;
     if (status !== SessionModel.STATUS.READY) { location.hash = '#/'; return; }
-    const count = this.mode === 'vendo' ? this.sell.openCount : this.search.state.saved.size;
+    const count = this.mode === 'vendo' ? this.sell.openCount : this.search.state.selected.size;
     this.view.render({ mode: this.mode, count });
   }
 }

@@ -114,7 +114,8 @@ export class App {
     this.router.add('/admin', () => new AdminController({ session, catalog: catalogAdmin }));
     this.router.add('/admin/miembros', () => new AdminMembersController({ session, members: membersAdmin }));
     this.router.add('/vendo', () => new SellController({ session, sell }));
-    this.router.add('/busco', () => new SearchController({ session, search }));
+    this.router.add('/compro', () => new SearchController({ session, search }));
+    this.router.add('/busco', () => new SearchController({ session, search })); // link viejo
     this.router.add('/coincidencias', () => new MatchesController({ mode: 'busco', session, search, sell }));
     this.router.add('/coincidencias/:mode', ({ mode }) => new MatchesController({ mode, session, search, sell }));
   }

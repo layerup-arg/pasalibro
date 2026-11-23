@@ -60,7 +60,7 @@ export class SellView extends View {
           <label class="label" for="phone">Tu WhatsApp</label>
           <input class="input" id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel"
                  placeholder="Ej: 11 2345 6789" value="${esc(whatsapp ? formatArPhone(whatsapp) : '')}" required>
-          <p class="hint">🔒 No se muestra en la lista. Solo lo ve una mamá cuando toca "Me interesa" en un libro tuyo.</p>
+          <p class="hint">🔒 No se muestra en la lista. Solo lo ve un usuario cuando toca "Me interesa" en un libro tuyo.</p>
           <div class="edit-actions">
             <button class="btn btn-primary sm" type="submit">Guardar</button>
             ${whatsapp ? '<button class="btn btn-light sm" type="button" data-action="cancel-phone">Cancelar</button>' : ''}

@@ -3,7 +3,7 @@ import { SearchView } from '../views/SearchView.js';
 import { SessionModel } from '../models/SessionModel.js';
 
 /**
- * Pantalla "Busco" (#/busco). Requiere sesión iniciada y escuela.
+ * Pantalla "Compro" (#/compro). Requiere sesión iniciada y escuela.
  */
 export class SearchController extends Controller {
   /**

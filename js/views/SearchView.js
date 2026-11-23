@@ -15,8 +15,8 @@ export class SearchView extends View {
       <a class="back" href="#/">← Inicio</a>
       <div class="page-head">
         <div>
-          <h1 class="page-title">Busco</h1>
-          <p class="page-lead">Tocá "Lo quiero" en los libros que necesitás; se guarda solo. Después te mostramos qué mamá tiene más de tu lista.</p>
+          <h1 class="page-title">Compro</h1>
+          <p class="page-lead">Tocá "Lo quiero" en los libros que necesitás; se guarda solo. Después te mostramos qué usuario tiene más de tu lista.</p>
         </div>
       </div>
 

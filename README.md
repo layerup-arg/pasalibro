@@ -94,7 +94,7 @@ La mamá elige grado y toca **"Lo vendo"** en los libros del catálogo que quier
 
 Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/SellModel.js` → `views/SellView.js` → `controllers/SellController.js`.
 
-## Busco (#/busco)
+## Compro (#/compro)
 
 La mamá elige grado y toca **"Lo quiero"** en los libros que necesita (igual que "Lo vendo" en Vendo).
 - Cada click se guarda solo en `wants`; no hay botón Guardar. "Quitar" lo saca de la lista.

@@ -23,7 +23,7 @@ export class HomeController extends Controller {
     this.view = new HomeView(container);
 
     this.view.onAction('login', () => this.session.loginWithGoogle());
-    this.view.onAction('search', () => location.hash = '#/busco');
+    this.view.onAction('search', () => location.hash = '#/compro');
     this.view.onAction('publish', () => location.hash = '#/vendo');
     this.view.onAction('admin', () => location.hash = '#/admin');
 

@@ -2,17 +2,17 @@ import { View } from '../core/View.js';
 
 const MODES = {
   busco: {
-    back: { href: '#/busco', label: '← Volver a Busco' },
+    back: { href: '#/compro', label: '← Volver a Compro' },
     icon: '🧩',
     title: 'Quién tiene tus libros',
-    text: n => `${n ? `Guardaste <strong>${n} ${n === 1 ? 'libro' : 'libros'}</strong> en tu lista. ` : ''}Muy pronto acá vas a ver qué mamá tiene más libros de tu lista, para comprarle todo junto.`,
+    text: n => `${n ? `Guardaste <strong>${n} ${n === 1 ? 'libro' : 'libros'}</strong> en tu lista. ` : ''}Muy pronto acá vas a ver qué usuario tiene más libros de tu lista, para comprarle todo junto.`,
     cta: 'Seguir editando mi lista',
   },
   vendo: {
     back: { href: '#/vendo', label: '← Volver a Vendo' },
     icon: '📣',
     title: 'Quién necesita tus libros',
-    text: n => `${n ? `Tenés <strong>${n} ${n === 1 ? 'libro publicado' : 'libros publicados'}</strong>. ` : ''}Muy pronto acá vas a ver qué mamás buscan más libros de los que ofrecés.`,
+    text: n => `${n ? `Tenés <strong>${n} ${n === 1 ? 'libro publicado' : 'libros publicados'}</strong>. ` : ''}Muy pronto acá vas a ver qué usuarios buscan más libros de los que ofrecés.`,
     cta: 'Seguir publicando',
   },
 };
