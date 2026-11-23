@@ -1,6 +1,7 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
 import { adminNav } from './adminNav.js';
+import { LANGUAGES, languageOf } from '../utils/language.js';
 import { bookInfo } from './bookInfo.js';
 
 /**
@@ -126,10 +127,17 @@ export class AdminView extends View {
               <input class="input" name="publisher" value="${esc(b.publisher ?? '')}" placeholder="Opcional">
             </label>
           </div>
-          <label class="label">Precio estimado
-            <input class="input" name="price" inputmode="numeric" placeholder="Ej: 25000"
-                   value="${b.estimated_price ?? ''}">
-          </label>
+          <div class="edit-grid">
+            <label class="label">Precio estimado
+              <input class="input" name="price" inputmode="numeric" placeholder="Ej: 25000"
+                     value="${b.estimated_price ?? ''}">
+            </label>
+            <label class="label">Idioma
+              <select class="input" name="language">
+                ${LANGUAGES.map(l => `<option value="${l.code}" ${languageOf(b.language).code === l.code ? 'selected' : ''}>${l.flag} ${l.label}</option>`).join('')}
+              </select>
+            </label>
+          </div>
           <div class="edit-actions">
             <button class="btn btn-primary sm" type="submit">Guardar</button>
             <button class="btn btn-light sm" type="button" data-action="cancel-edit">Cancelar</button>
@@ -144,8 +152,9 @@ export class AdminView extends View {
         <div class="panel-head"><h2>Agregar libros a ${esc(grade.name)}</h2></div>
         <form class="form pad" data-action="add-books">
           <textarea class="input textarea" name="text" data-draft rows="5"
-            placeholder="Título ; Autor ; Editorial ; Precio&#10;El Nombre Secreto ; Fulana de Tal ; Editorial Sur ; 25000&#10;Libertadores ; ; Santillana&#10;Aprender a Ser 3"></textarea>
-          <p class="hint">Un libro por línea. Separá con <strong>;</strong> en este orden: <strong>título ; autor ; editorial ; precio</strong>.
+            placeholder="Título ; Autor ; Editorial ; Precio ; Idioma&#10;Wonder ; R. J. Palacio ; Transworld ; 12000 ; en&#10;El Nombre Secreto ; Laura No ; Estrada ; 13100&#10;Aprender a Ser 3"></textarea>
+          <p class="hint">Un libro por línea. Separá con <strong>;</strong> en este orden: <strong>título ; autor ; editorial ; precio ; idioma</strong>.
+            Idioma: <strong>en</strong> (inglés) o <strong>es</strong> (castellano); si no lo ponés, queda en castellano.
             Solo el título es obligatorio: si falta un dato, dejalo vacío entre los ; (o cortá la línea antes).
             Los que ya estén cargados en el grado se saltean.</p>
           <button class="btn btn-primary" type="submit">Agregar</button>

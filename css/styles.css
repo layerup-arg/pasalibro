@@ -266,3 +266,4 @@ a.btn{text-decoration:none}
 .btn-wa:hover{background:#2FE072}
 .btn-wa:disabled{opacity:.7;cursor:progress}
 @media(max-width:480px){.btn-wa{width:100%;justify-content:center}}
+.book-flag{display:inline-block;margin-right:.4rem;font-size:1.05em;line-height:1;vertical-align:-.05em}

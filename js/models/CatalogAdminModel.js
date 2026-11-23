@@ -1,4 +1,5 @@
 import { Model } from '../core/Model.js';
+import { DEFAULT_LANGUAGE, parseLanguage } from '../utils/language.js';
 import { parsePrice } from '../utils/format.js';
 
 /**
@@ -59,7 +60,7 @@ export class CatalogAdminModel extends Model {
   // ---------- Libros ----------
   /**
    * Agrega uno o varios libros. Una línea por libro, campos separados por ";":
-   *   título ; autor ; editorial ; precio     (solo el título es obligatorio)
+   *   título ; autor ; editorial ; precio ; idioma     (solo el título es obligatorio; idioma: en/es, por defecto es)
    *   "El Equipo de Mate 3"
    *   "El Nombre Secreto ; Fulana ; Editorial Sur ; 25000"
    *   "El Equipo de Mate 3 ; 25000"            (formato viejo: título ; precio, sigue andando)
@@ -67,7 +68,7 @@ export class CatalogAdminModel extends Model {
   async addBooks(text) {
     const { books, gradeId } = this.state;
     const { items, invalid } = CatalogAdminModel.parseLines(text);
-    if (invalid.length) return this.#error(`Precio inválido en: ${invalid.join(', ')}`);
+    if (invalid.length) return this.#error(`Precio o idioma inválido en: ${invalid.join(', ')}`);
     if (!items.length) return this.#error('Escribí al menos un título.');
 
     const existing = new Set(books.map(b => b.title.toLowerCase()));
@@ -101,7 +102,7 @@ export class CatalogAdminModel extends Model {
     this.setState({ editingId: null });
   }
 
-  async saveBook(id, { title, author, publisher, price }) {
+  async saveBook(id, { title, author, publisher, price, language }) {
     const cleanTitle = String(title ?? '').trim();
     const estimated_price = parsePrice(price);
     if (!cleanTitle) return this.#error('El título no puede quedar vacío.');
@@ -115,6 +116,7 @@ export class CatalogAdminModel extends Model {
         author: CatalogAdminModel.clean(author),
         publisher: CatalogAdminModel.clean(publisher),
         estimated_price,
+        language: parseLanguage(language) ?? DEFAULT_LANGUAGE,
       });
       this.setState({ editingId: null, notice: 'Cambios guardados', error: null });
       await this.#loadBooks();
@@ -166,8 +168,8 @@ export class CatalogAdminModel extends Model {
 
   // ---------- Helpers ----------
   /**
-   * Separa el texto pegado en { items: [{title, author, publisher, estimated_price}], invalid: [títulos con precio mal] }
-   * Formato por línea: título ; autor ; editorial ; precio  (también acepta tabs, por si se pega desde una planilla)
+   * Separa el texto pegado en { items: [{title, author, publisher, estimated_price, language}], invalid: [títulos con precio o idioma mal] }
+   * Formato por línea: título ; autor ; editorial ; precio ; idioma  (también acepta tabs, por si se pega desde una planilla)
    */
   static parseLines(text) {
     const items = [];
@@ -177,19 +179,21 @@ export class CatalogAdminModel extends Model {
       const title = (parts[0] ?? '').replace(/^\s*[-•*·]\s*/, '').trim();
       if (!title) return;
 
-      let [, author = '', publisher = '', rawPrice = ''] = parts;
+      let [, author = '', publisher = '', rawPrice = '', rawLang = ''] = parts;
       // Formato viejo "título ; precio": si hay solo 2 campos y el segundo es un número, es el precio.
       if (parts.length === 2 && author && !Number.isNaN(parsePrice(author))) {
         rawPrice = author;
         author = '';
       }
       const estimated_price = parsePrice(rawPrice);
-      if (Number.isNaN(estimated_price)) { invalid.push(title); return; }
+      const language = rawLang ? parseLanguage(rawLang) : DEFAULT_LANGUAGE;
+      if (Number.isNaN(estimated_price) || !language) { invalid.push(title); return; }
       items.push({
         title,
         author: CatalogAdminModel.clean(author),
         publisher: CatalogAdminModel.clean(publisher),
         estimated_price,
+        language,
       });
     });
     return { items, invalid };

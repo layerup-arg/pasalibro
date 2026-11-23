@@ -71,7 +71,9 @@ Solo para quien tiene rol `admin` en `school_members`. Permite, por escuela:
   (solo el título es obligatorio; también acepta tabs si se pega desde una planilla, y el formato viejo `título ; precio`);
 - editar título, autor, editorial y precio estimado, ocultar/mostrar a las familias y borrar.
 
-La tarjeta de libro es igual en Administrar, Vendo y Busco (`views/bookInfo.js`):
+Cada libro tiene idioma (`language`: `en` inglés 🇬🇧 / `es` castellano 🇦🇷, definido en `utils/language.js`). Todos los listados se ordenan primero por idioma y después por título.
+
+La tarjeta de libro es igual en Administrar, Vendo, Compro y Coincidencias (`views/bookInfo.js`):
 título arriba, autor · editorial abajo, precio de referencia a la derecha.
 
 Archivos: `repositories/CatalogRepository.js` → `models/CatalogAdminModel.js` → `views/AdminView.js` → `controllers/AdminController.js`.
@@ -121,7 +123,7 @@ Las coincidencias existen solo del lado del comprador: es quien inicia el contac
 
 ## Modelo de datos (Supabase)
 
-Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`, `005_autor_editorial.sql`, `006_listas_2027.sql`, `007_contactar_vendedor.sql`.
+Scripts en `supabase/`, se corren en orden en el SQL Editor: `001_base.sql`, `002_modelo.sql`, `003_datos_st_johns.sql`, `004_un_admin_minimo.sql`, `005_autor_editorial.sql`, `006_listas_2027.sql`, `007_contactar_vendedor.sql`, `008_idioma.sql`.
 
 | Tabla | Qué guarda | Quién escribe |
 |---|---|---|

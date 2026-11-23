@@ -48,7 +48,7 @@ export class OfferRepository {
   getAvailableBySellers(sellerIds) {
     if (!sellerIds.length) return Promise.resolve([]);
     return this.api.select('offers', {
-      select: 'id,book_id,seller_id,seller:profiles(full_name),book:books(id,title,author,publisher,estimated_price,grade_id,active)',
+      select: 'id,book_id,seller_id,seller:profiles(full_name),book:books(id,title,author,publisher,estimated_price,language,grade_id,active)',
       seller_id: `in.(${sellerIds.join(',')})`,
       status: `eq.${OfferRepository.STATUS.AVAILABLE}`,
     });

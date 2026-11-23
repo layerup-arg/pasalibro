@@ -1,3 +1,5 @@
+import { compareBooks } from '../utils/language.js';
+
 /**
  * Catálogo de cada escuela: grados (`grades`) y libros por grado (`books`).
  * Escribir solo lo pueden hacer admins (lo controla RLS en Supabase).
@@ -23,23 +25,23 @@ export class CatalogRepository {
   }
 
   // ---------- Libros ----------
-  /** Todos los libros del grado, incluidos los ocultos (para el admin). */
-  getBooks(gradeId) {
-    return this.api.select('books', {
-      select: 'id,title,author,publisher,estimated_price,active',
+  /** Todos los libros del grado, incluidos los ocultos (para el admin). Ordenados por idioma y título. */
+  async getBooks(gradeId) {
+    const rows = await this.api.select('books', {
+      select: 'id,title,author,publisher,estimated_price,language,active',
       grade_id: `eq.${gradeId}`,
-      order: 'title.asc',
     });
+    return rows.sort(compareBooks);
   }
 
-  /** Solo los libros visibles para las familias. */
-  getActiveBooks(gradeId) {
-    return this.api.select('books', {
-      select: 'id,title,author,publisher,estimated_price',
+  /** Solo los libros visibles para las familias. Ordenados por idioma y título. */
+  async getActiveBooks(gradeId) {
+    const rows = await this.api.select('books', {
+      select: 'id,title,author,publisher,estimated_price,language',
       grade_id: `eq.${gradeId}`,
       active: 'eq.true',
-      order: 'title.asc',
     });
+    return rows.sort(compareBooks);
   }
 
   /** Cantidad de libros visibles por grado: { [gradeId]: cantidad } */

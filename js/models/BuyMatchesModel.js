@@ -1,5 +1,6 @@
 import { Model } from '../core/Model.js';
 import { whatsappLink } from '../utils/phone.js';
+import { compareBooks } from '../utils/language.js';
 
 /**
  * Coincidencias desde Compro (#/coincidencias/busco):
@@ -37,7 +38,7 @@ export class BuyMatchesModel extends Model {
       ]);
       const order = Object.fromEntries(grades.map(g => [g.id, g.sort_order]));
       const inSchool = book => book && book.active !== false && book.grade_id in order;
-      const byGradeThenTitle = (a, b) => (order[a.grade_id] - order[b.grade_id]) || a.title.localeCompare(b.title);
+      const byGradeThenTitle = (a, b) => (order[a.grade_id] - order[b.grade_id]) || compareBooks(a, b);
 
       const myBooks = wants.map(w => w.book).filter(inSchool).sort(byGradeThenTitle);
       const sellerIds = await this.offerRepo.getSellersOf(myBooks.map(b => b.id), userId);

@@ -18,7 +18,7 @@ export class WantRepository {
   /** Mis búsquedas con los datos completos de cada libro (para las coincidencias). */
   getMineWithBooks(userId) {
     return this.api.select('wants', {
-      select: 'book_id,book:books(id,title,author,publisher,estimated_price,grade_id,active)',
+      select: 'book_id,book:books(id,title,author,publisher,estimated_price,language,grade_id,active)',
       user_id: `eq.${userId}`,
     });
   }
