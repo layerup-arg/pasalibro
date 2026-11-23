@@ -89,8 +89,7 @@ La mamá elige grado y toca **"Lo vendo"** en los libros del catálogo que quier
 - Antes de publicar carga su WhatsApp una vez (`profile_contact`, privado). Se normaliza a `549…` (`utils/phone.js`).
 - Cada publicación tiene estado: **Disponible / Reservado / Vendido**, y se puede quitar.
 - Si un libro ya se vendió, puede publicar otro ejemplar ("Vendo otro").
-- Muestra cuántas mamás buscan cada libro (`wants`) y el precio de referencia del admin.
-- Barra flotante con "Ver quién los necesita →" que lleva a `#/coincidencias/vendo`.
+- Cada libro muestra cuántos usuarios lo quieren ("2 usuarios lo quieren"). Barra flotante con la cantidad publicada.
 
 Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/SellModel.js` → `views/SellView.js` → `controllers/SellController.js`.
 
@@ -100,11 +99,11 @@ La mamá elige grado y toca **"Lo quiero"** en los libros que necesita (igual qu
 - Cada click se guarda solo en `wants`; no hay botón Guardar. "Quitar" lo saca de la lista.
 - Muestra cuántos OTROS usuarios tienen cada libro disponible.
 - "Quiero todos" agrega de una todos los libros del grado que faltan (desaparece cuando ya están todos).
-- "Ver quién los tiene →" lleva a `#/coincidencias/busco`.
+- "Ver quién los tiene →" lleva a `#/coincidencias`.
 
 Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.
 
-## Coincidencias desde Compro (#/coincidencias/busco)
+## Coincidencias desde Compro (#/coincidencias)
 
 "Ver quién los tiene →" lleva a la lista de usuarios que tienen disponible algún libro de mi lista,
 ordenados por cuántos tienen (a igualdad, por monto de referencia). Tocar un usuario abre un panel con:
@@ -118,7 +117,7 @@ y la lista de libros de mi lista que tiene.
 
 `OfferRepository.getSellersOf/getAvailableBySellers` + `WantRepository.getMineWithBooks` → `models/BuyMatchesModel.js` → `views/BuyMatchesView.js` → `controllers/MatchesController.js`.
 
-**Pendiente:** `#/coincidencias/vendo` (qué usuarios necesitan más de mis libros).
+Las coincidencias existen solo del lado del comprador: es quien inicia el contacto. En Vendo cada libro muestra cuántos usuarios lo quieren.
 
 ## Modelo de datos (Supabase)
 

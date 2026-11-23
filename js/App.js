@@ -122,8 +122,8 @@ export class App {
     this.router.add('/vendo', () => new SellController({ session, sell }));
     this.router.add('/compro', () => new SearchController({ session, search }));
     this.router.add('/busco', () => new SearchController({ session, search })); // link viejo
-    this.router.add('/coincidencias', () => new MatchesController({ mode: 'busco', session, buyMatches, sell }));
-    this.router.add('/coincidencias/:mode', ({ mode }) => new MatchesController({ mode, session, buyMatches, sell }));
+    this.router.add('/coincidencias', () => new MatchesController({ session, buyMatches }));
+    this.router.add('/coincidencias/:mode', () => new MatchesController({ session, buyMatches })); // links viejos
   }
 
   #syncLayout(session) {

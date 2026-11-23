@@ -18,7 +18,6 @@ const STATUS_OPTIONS = [
  *   'offer' {id}                 publicar libro (id = book id)
  *   'status' {id, status}        cambiar estado (id = offer id)
  *   'remove' {id}                quitar publicación (id = offer id)
- *   'matches'                    ir a coincidencias (quién necesita mis libros)
  */
 export class SellView extends View {
   template(s) {
@@ -103,7 +102,9 @@ export class SellView extends View {
       <li class="book-row sell-row ${open ? 'is-mine' : ''}">
         <div class="book-main">
           ${bookInfo(book, { tags: [
-            wanted ? `<span class="tag hot">${wanted} ${wanted === 1 ? 'lo busca' : 'lo buscan'}</span>` : '',
+            wanted
+              ? `<span class="tag hot">${wanted} ${wanted === 1 ? 'usuario lo quiere' : 'usuarios lo quieren'}</span>`
+              : '<span class="tag">nadie lo pidió todavía</span>',
             offer?.status === 'sold' ? '<span class="tag">ya vendiste uno</span>' : '',
           ].join('') })}
         </div>
@@ -117,18 +118,13 @@ export class SellView extends View {
       </li>`;
   }
 
-  /** Barra flotante: cuántos libros ofrezco + ir a coincidencias. */
-  #bar({ openCount, busyBookId }) {
+  /** Barra flotante: cuántos libros ofrezco. */
+  #bar({ openCount }) {
     return `
       <div class="action-bar">
         <div class="bar-info">
           <strong>${openCount} ${openCount === 1 ? 'libro publicado' : 'libros publicados'}</strong>
           <span class="muted">${openCount ? 'Se guarda solo' : 'Tocá "Lo vendo" para publicar'}</span>
-        </div>
-        <div class="bar-buttons">
-          <button class="btn btn-primary sm" data-action="matches" ${!openCount || busyBookId ? 'disabled' : ''}>
-            Ver quién los necesita →
-          </button>
         </div>
       </div>`;
   }

@@ -53,6 +53,6 @@ export class SearchController extends Controller {
     this.view.onAction('want', ({ id }) => m.want(id));
     this.view.onAction('unwant', ({ id }) => m.unwant(id));
     this.view.onAction('want-all', () => m.wantAllInGrade());
-    this.view.onAction('matches', () => { location.hash = '#/coincidencias/busco'; });
+    this.view.onAction('matches', () => { location.hash = '#/coincidencias'; });
   }
 }
