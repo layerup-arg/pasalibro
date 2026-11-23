@@ -67,7 +67,7 @@ export class SearchView extends View {
           <span class="check" aria-hidden="true">${on ? '✓' : ''}</span>
           <span class="book-main">
             ${bookInfo(book, { tags: available
-              ? `<span class="tag ok">${available} ${available === 1 ? 'mamá lo tiene' : 'mamás lo tienen'}</span>`
+              ? `<span class="tag ok">${available} ${available === 1 ? 'usuario lo tiene' : 'usuarios lo tienen'}</span>`
               : '<span class="tag">nadie lo ofrece todavía</span>' })}
           </span>
         </button>
