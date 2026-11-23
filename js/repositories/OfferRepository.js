@@ -32,6 +32,28 @@ export class OfferRepository {
       .reduce((acc, r) => ({ ...acc, [r.book_id]: (acc[r.book_id] ?? 0) + 1 }), {});
   }
 
+  /** Ids de los OTROS usuarios que tienen disponible alguno de estos libros. */
+  async getSellersOf(bookIds, excludeUserId) {
+    if (!bookIds.length) return [];
+    const rows = await this.api.select('offers', {
+      select: 'seller_id',
+      book_id: `in.(${bookIds.join(',')})`,
+      status: `eq.${OfferRepository.STATUS.AVAILABLE}`,
+      seller_id: `neq.${excludeUserId}`,
+    });
+    return [...new Set(rows.map(r => r.seller_id))];
+  }
+
+  /** Todo lo que tienen disponible estos usuarios, con el nombre y los datos del libro. */
+  getAvailableBySellers(sellerIds) {
+    if (!sellerIds.length) return Promise.resolve([]);
+    return this.api.select('offers', {
+      select: 'id,book_id,seller_id,seller:profiles(full_name),book:books(id,title,author,publisher,estimated_price,grade_id,active)',
+      seller_id: `in.(${sellerIds.join(',')})`,
+      status: `eq.${OfferRepository.STATUS.AVAILABLE}`,
+    });
+  }
+
   async create(bookId) {
     const [row] = await this.api.insert('offers', { book_id: bookId });
     return row;

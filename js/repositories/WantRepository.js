@@ -15,6 +15,14 @@ export class WantRepository {
     return rows.reduce((acc, r) => ({ ...acc, [r.book_id]: (acc[r.book_id] ?? 0) + 1 }), {});
   }
 
+  /** Mis búsquedas con los datos completos de cada libro (para las coincidencias). */
+  getMineWithBooks(userId) {
+    return this.api.select('wants', {
+      select: 'book_id,book:books(id,title,author,publisher,estimated_price,grade_id,active)',
+      user_id: `eq.${userId}`,
+    });
+  }
+
   /** Mis búsquedas, con el grado de cada libro: [{ book_id, book: { grade_id } }] */
   getMine(userId) {
     return this.api.select('wants', {

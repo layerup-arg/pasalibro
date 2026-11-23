@@ -218,3 +218,30 @@ a.btn{text-decoration:none}
 .book-row.is-hidden .book-price{color:var(--muted)}
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
 @media(max-width:480px){.edit-grid{grid-template-columns:1fr}}
+
+/* Coincidencias desde Compro */
+.match-summary{margin:0 0 .8rem}
+.match-list{list-style:none;display:grid;gap:.7rem;margin-bottom:1rem}
+.match-card{background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.match-card.open{border-color:var(--ink);box-shadow:3px 3px 0 var(--mustard)}
+.match-head{width:100%;display:flex;align-items:center;gap:.75rem;padding:.85rem 1.1rem;background:none;border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.match-head:hover{background:#FFFBF2}
+.match-rank{flex:0 0 auto;width:1.4rem;font-weight:800;color:var(--muted);text-align:center}
+.match-who{flex:1;min-width:0;display:grid;gap:.15rem}
+.match-who small{color:var(--ink2);font-size:.85rem}
+.match-meter{display:block;height:6px;border-radius:99px;background:var(--paper2);overflow:hidden;margin-top:.25rem;max-width:260px}
+.match-meter span{display:block;height:100%;background:#2E8B62;border-radius:99px}
+.match-count{flex:0 0 auto;font-size:1.5rem;font-weight:800;color:#2E8B62;line-height:1}
+.match-count small{font-size:.85rem;color:var(--muted);font-weight:700}
+.chev{flex:0 0 auto;color:var(--muted);font-size:.9rem}
+.match-detail{border-top:1.5px solid var(--line);padding-bottom:.4rem}
+.match-sec{display:flex;align-items:center;gap:.45rem;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--ink2);padding:.8rem 1.1rem .35rem}
+.match-sec span{background:var(--paper2);border-radius:99px;padding:0 .45rem;font-size:.72rem}
+.match-sec.ok{color:#2E8B62}
+.match-sec.no{color:var(--tomato)}
+.match-books .book-row{padding:.55rem 1.1rem}
+.match-books.yes .book-row{background:#F3FAF6}
+.match-books.no .book-title{color:var(--ink2)}
+.match-books.no .book-row,.match-books.other .book-row{opacity:.85}
+.match-all{padding:.6rem 1.1rem;font-weight:700;color:#2E8B62}
+@media(max-width:480px){.match-rank{display:none}.match-head{gap:.6rem;padding:.8rem}}

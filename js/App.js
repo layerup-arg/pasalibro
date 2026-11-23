@@ -17,6 +17,7 @@ import { SessionModel } from './models/SessionModel.js';
 import { CatalogAdminModel } from './models/CatalogAdminModel.js';
 import { SellModel } from './models/SellModel.js';
 import { SearchModel } from './models/SearchModel.js';
+import { BuyMatchesModel } from './models/BuyMatchesModel.js';
 import { MembersAdminModel } from './models/MembersAdminModel.js';
 
 import { LayoutView } from './views/LayoutView.js';
@@ -83,6 +84,11 @@ export class App {
         wantRepo: this.repos.wants,
         offerRepo: this.repos.offers,
       }),
+      buyMatches: new BuyMatchesModel({
+        catalogRepo: this.repos.catalog,
+        wantRepo: this.repos.wants,
+        offerRepo: this.repos.offers,
+      }),
     };
   }
 
@@ -108,7 +114,7 @@ export class App {
   }
 
   #registerRoutes() {
-    const { session, status, catalogAdmin, membersAdmin, sell, search } = this.models;
+    const { session, status, catalogAdmin, membersAdmin, sell, search, buyMatches } = this.models;
     this.router.add('/', () => new HomeController({ session, status }));
     this.router.add('/unirme', () => new JoinController({ session }));
     this.router.add('/admin', () => new AdminController({ session, catalog: catalogAdmin }));
@@ -116,8 +122,8 @@ export class App {
     this.router.add('/vendo', () => new SellController({ session, sell }));
     this.router.add('/compro', () => new SearchController({ session, search }));
     this.router.add('/busco', () => new SearchController({ session, search })); // link viejo
-    this.router.add('/coincidencias', () => new MatchesController({ mode: 'busco', session, search, sell }));
-    this.router.add('/coincidencias/:mode', ({ mode }) => new MatchesController({ mode, session, search, sell }));
+    this.router.add('/coincidencias', () => new MatchesController({ mode: 'busco', session, buyMatches, sell }));
+    this.router.add('/coincidencias/:mode', ({ mode }) => new MatchesController({ mode, session, buyMatches, sell }));
   }
 
   #syncLayout(session) {

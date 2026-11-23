@@ -104,8 +104,17 @@ La mamá elige grado y toca **"Lo quiero"** en los libros que necesita (igual qu
 
 Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.
 
-**Pendiente:** coincidencias (`MatchesController`/`MatchesView`), en dos modos:
-`#/coincidencias/busco` (qué mamá tiene más libros de mi lista) y `#/coincidencias/vendo` (qué mamás necesitan más de mis libros).
+## Coincidencias desde Compro (#/coincidencias/busco)
+
+"Ver quién los tiene →" lleva a la lista de usuarios que tienen disponible algún libro de mi lista,
+ordenados por cuántos tienen (a igualdad, por monto de referencia). Tocar un usuario abre un panel con:
+- ✓ los libros de mi lista que tiene,
+- ✗ los de mi lista que no tiene,
+- otros libros que también vende.
+
+`OfferRepository.getSellersOf/getAvailableBySellers` + `WantRepository.getMineWithBooks` → `models/BuyMatchesModel.js` → `views/BuyMatchesView.js` → `controllers/MatchesController.js`.
+
+**Pendiente:** `#/coincidencias/vendo` (qué usuarios necesitan más de mis libros) y el contacto por WhatsApp.
 
 ## Modelo de datos (Supabase)
 
