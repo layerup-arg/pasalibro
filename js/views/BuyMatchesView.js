@@ -74,23 +74,28 @@ export class BuyMatchesView extends View {
   }
 
   #detail(s, gradeNames) {
-    const list = (books, cls) => `
-      <ul class="book-list match-books ${cls}">
+    const list = (books, icon) => `
+      <ul class="match-books">
         ${books.map(b => `
           <li class="book-row">
+            <span class="mb-ico" aria-hidden="true">${icon}</span>
             <div class="book-main">${bookInfo(b, { tags: `<span class="tag">${esc(gradeNames[b.grade_id] ?? '')}</span>` })}</div>
           </li>`).join('')}
       </ul>`;
+    const section = (cls, title, books, icon) => `
+      <section class="match-box ${cls}">
+        <h3 class="match-sec">${title} <span>${books.length}</span></h3>
+        ${list(books, icon)}
+      </section>`;
     return `
       <div class="match-detail">
-        <h3 class="match-sec ok">✓ Tiene de tu lista <span>${s.matches.length}</span></h3>
-        ${list(s.matches, 'yes')}
-        ${s.missing.length ? `
-          <h3 class="match-sec no">✗ De tu lista no tiene <span>${s.missing.length}</span></h3>
-          ${list(s.missing, 'no')}` : '<p class="match-all">🎉 Tiene todos los libros de tu lista</p>'}
+        ${section('yes', 'Tiene de tu lista', s.matches, '✓')}
+        ${s.missing.length
+          ? section('no', 'De tu lista no tiene', s.missing, '✗')
+          : '<p class="match-all">🎉 Tiene todos los libros de tu lista</p>'}
         ${s.others.length ? `
-          <h3 class="match-sec">También vende <span>${s.others.length}</span></h3>
-          ${list(s.others, 'other')}` : ''}
+          <div class="match-divider"><span>Otros libros que vende</span></div>
+          ${section('other', 'También vende', s.others, '•')}` : ''}
       </div>`;
   }
 }
