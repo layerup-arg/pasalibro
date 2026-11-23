@@ -99,6 +99,7 @@ Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/Sel
 La mamá elige grado y toca **"Lo quiero"** en los libros que necesita (igual que "Lo vendo" en Vendo).
 - Cada click se guarda solo en `wants`; no hay botón Guardar. "Quitar" lo saca de la lista.
 - Muestra cuántos OTROS usuarios tienen cada libro disponible.
+- "Quiero todos" agrega de una todos los libros del grado que faltan (desaparece cuando ya están todos).
 - "Ver quién los tiene →" lleva a `#/coincidencias/busco`.
 
 Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.

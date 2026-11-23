@@ -167,6 +167,7 @@ a.btn{text-decoration:none}
 .sell-actions{display:flex;align-items:center;gap:.6rem;flex:0 0 auto}
 @media(max-width:560px){.sell-actions{width:100%;justify-content:space-between}}
 .tag.hot{background:#FCF0D2;color:#8A5A00}
+.panel-head-right{display:flex;align-items:center;gap:.7rem}
 .want-on{font-weight:800;font-size:.88rem;color:#2E8B62}
 .segmented{display:inline-flex;border:1.5px solid rgba(31,42,68,.18);border-radius:11px;overflow:hidden;background:#fff}
 .seg{font-family:inherit;font-weight:800;font-size:.8rem;padding:.45rem .65rem;border:0;background:transparent;color:var(--ink2);cursor:pointer}

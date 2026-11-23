@@ -6,7 +6,7 @@ import { bookInfo } from './bookInfo.js';
  * Pantalla "Busco".
  *
  * Acciones que emite:
- *   'grade' {id} · 'want' {id} · 'unwant' {id} · 'matches'
+ *   'grade' {id} · 'want' {id} · 'unwant' {id} · 'want-all' · 'matches'
  * Cada click se guarda solo (igual que Vendo).
  */
 export class SearchView extends View {
@@ -41,7 +41,7 @@ export class SearchView extends View {
       </nav>`;
   }
 
-  #panel({ grades, gradeId, books, selected, available, loading, busyBookId }) {
+  #panel({ grades, gradeId, books, selected, available, loading, busyBookId, savingAll }) {
     const grade = grades.find(g => g.id === gradeId);
     if (!grade) return '<p class="muted pad">Tu escuela todavía no cargó grados.</p>';
     const mine = books.filter(b => selected.has(b.id)).length;
@@ -49,11 +49,16 @@ export class SearchView extends View {
       <section class="panel">
         <div class="panel-head">
           <h2>${esc(grade.name)}</h2>
-          <span class="muted">${mine ? `querés ${mine} de ${books.length}` : `${books.length} ${books.length === 1 ? 'libro' : 'libros'}`}</span>
+          <span class="panel-head-right">
+            <span class="muted">${mine ? `querés ${mine} de ${books.length}` : `${books.length} ${books.length === 1 ? 'libro' : 'libros'}`}</span>
+            ${!loading && books.length && mine < books.length
+              ? `<button class="btn btn-light sm" data-action="want-all" ${savingAll || busyBookId ? 'disabled' : ''}>${savingAll ? 'Guardando…' : 'Quiero todos'}</button>`
+              : ''}
+          </span>
         </div>
         ${loading ? '<p class="muted pad">Cargando…</p>'
           : !books.length ? '<p class="muted pad">La escuela todavía no cargó libros para este grado.</p>'
-          : `<ul class="book-list">${books.map(b => this.#row(b, selected.has(b.id), available[b.id] ?? 0, busyBookId === b.id)).join('')}</ul>`}
+          : `<ul class="book-list">${books.map(b => this.#row(b, selected.has(b.id), available[b.id] ?? 0, busyBookId === b.id || savingAll)).join('')}</ul>`}
       </section>`;
   }
 

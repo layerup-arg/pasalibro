@@ -22,6 +22,7 @@ export class SearchModel extends Model {
       gradeOf: {},           // { bookId: gradeId } para contar por pestaña
       available: {},         // { bookId: cuántos otros usuarios lo tienen disponible }
       busyBookId: null,      // libro que se está guardando
+      savingAll: false,      // guardando "Quiero todos"
       loading: true,
       notice: null,
       error: null,
@@ -97,6 +98,24 @@ export class SearchModel extends Model {
         notice: `Agregaste "${book?.title ?? 'el libro'}"`,
       });
     });
+  }
+
+  /** "Quiero todos": agrega a mi lista todos los libros del grado que me faltan. */
+  async wantAllInGrade() {
+    const missing = this.state.books.map(b => b.id).filter(id => !this.state.selected.has(id));
+    if (!missing.length) return;
+    this.setState({ savingAll: true, error: null, notice: null });
+    try {
+      await this.wantRepo.add(missing);
+      this.setState({
+        selected: new Set([...this.state.selected, ...missing]),
+        notice: `Agregaste ${missing.length} ${missing.length === 1 ? 'libro' : 'libros'} a tu lista`,
+      });
+    } catch (err) {
+      this.#fail(err);
+    } finally {
+      this.setState({ savingAll: false });
+    }
   }
 
   /** "Quitar": lo saca de mi lista. */
