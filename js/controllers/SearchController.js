@@ -25,13 +25,7 @@ export class SearchController extends Controller {
 
     this.listen(this.search, 'change', () => this.#render());
     this.listen(this.session, 'change', () => this.#start());
-    window.addEventListener('beforeunload', this.#warnUnsaved);
     this.#start();
-  }
-
-  unmount() {
-    window.removeEventListener('beforeunload', this.#warnUnsaved);
-    super.unmount();
   }
 
   #start() {
@@ -49,7 +43,6 @@ export class SearchController extends Controller {
     if (!this.started) return;
     this.view.render({
       ...this.search.state,
-      isDirty: this.search.isDirty,
       selectedByGrade: this.search.selectedByGrade,
     });
   }
@@ -57,21 +50,8 @@ export class SearchController extends Controller {
   #bindActions() {
     const m = this.search;
     this.view.onAction('grade', ({ id }) => m.selectGrade(id));
-    this.view.onAction('toggle', ({ id }) => m.toggle(id));
-    this.view.onAction('toggle-all', () => m.toggleAllInGrade());
-    this.view.onAction('save', () => m.save());
-    this.view.onAction('discard', () => m.discard());
-    // Ir a las coincidencias: primero guarda lo pendiente para que la otra pantalla vea la lista real.
-    this.view.onAction('matches', async () => {
-      if (await m.save()) location.hash = '#/coincidencias/busco';
-    });
+    this.view.onAction('want', ({ id }) => m.want(id));
+    this.view.onAction('unwant', ({ id }) => m.unwant(id));
+    this.view.onAction('matches', () => { location.hash = '#/coincidencias/busco'; });
   }
-
-  /** Avisa si cierra la pestaña con cambios sin guardar. */
-  #warnUnsaved = (event) => {
-    if (this.search.isDirty) {
-      event.preventDefault();
-      event.returnValue = '';
-    }
-  };
 }

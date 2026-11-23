@@ -6,8 +6,8 @@ import { bookInfo } from './bookInfo.js';
  * Pantalla "Busco".
  *
  * Acciones que emite:
- *   'grade' {id} · 'toggle' {id} · 'toggle-all'
- *   'save' · 'discard' · 'matches'
+ *   'grade' {id} · 'want' {id} · 'unwant' {id} · 'matches'
+ * Cada click se guarda solo (igual que Vendo).
  */
 export class SearchView extends View {
   template(s) {
@@ -16,7 +16,7 @@ export class SearchView extends View {
       <div class="page-head">
         <div>
           <h1 class="page-title">Busco</h1>
-          <p class="page-lead">Marcá los libros que necesitás y guardá. Después te mostramos qué mamá tiene más de tu lista.</p>
+          <p class="page-lead">Tocá "Lo quiero" en los libros que necesitás; se guarda solo. Después te mostramos qué mamá tiene más de tu lista.</p>
         </div>
       </div>
 
@@ -41,54 +41,52 @@ export class SearchView extends View {
       </nav>`;
   }
 
-  #panel({ grades, gradeId, books, selected, available, loading }) {
+  #panel({ grades, gradeId, books, selected, available, loading, busyBookId }) {
     const grade = grades.find(g => g.id === gradeId);
     if (!grade) return '<p class="muted pad">Tu escuela todavía no cargó grados.</p>';
-    const allOn = books.length && books.every(b => selected.has(b.id));
+    const mine = books.filter(b => selected.has(b.id)).length;
     return `
       <section class="panel">
         <div class="panel-head">
           <h2>${esc(grade.name)}</h2>
-          ${books.length && !loading
-            ? `<button class="link-btn inline small" data-action="toggle-all">${allOn ? 'Desmarcar todos' : 'Marcar todos'}</button>`
-            : ''}
+          <span class="muted">${mine ? `querés ${mine} de ${books.length}` : `${books.length} ${books.length === 1 ? 'libro' : 'libros'}`}</span>
         </div>
         ${loading ? '<p class="muted pad">Cargando…</p>'
           : !books.length ? '<p class="muted pad">La escuela todavía no cargó libros para este grado.</p>'
-          : `<ul class="book-list">${books.map(b => this.#row(b, selected.has(b.id), available[b.id] ?? 0)).join('')}</ul>`}
+          : `<ul class="book-list">${books.map(b => this.#row(b, selected.has(b.id), available[b.id] ?? 0, busyBookId === b.id)).join('')}</ul>`}
       </section>`;
   }
 
-  #row(book, on, available) {
+  #row(book, on, available, busy) {
     return `
-      <li>
-        <button class="pick-row ${on ? 'on' : ''}" data-action="toggle" data-id="${book.id}"
-                role="checkbox" aria-checked="${on}">
-          <span class="check" aria-hidden="true">${on ? '✓' : ''}</span>
-          <span class="book-main">
-            ${bookInfo(book, { tags: available
-              ? `<span class="tag ok">${available} ${available === 1 ? 'usuario lo tiene' : 'usuarios lo tienen'}</span>`
-              : '<span class="tag">nadie lo ofrece todavía</span>' })}
-          </span>
-        </button>
+      <li class="book-row sell-row ${on ? 'is-mine' : ''}">
+        <div class="book-main">
+          ${bookInfo(book, { tags: available
+            ? `<span class="tag ok">${available} ${available === 1 ? 'usuario lo tiene' : 'usuarios lo tienen'}</span>`
+            : '<span class="tag">nadie lo ofrece todavía</span>' })}
+        </div>
+        <div class="sell-actions">
+          ${on ? `
+            <span class="want-on">✓ Lo quiero</span>
+            <button class="link-btn inline small" data-action="unwant" data-id="${book.id}" ${busy ? 'disabled' : ''}>${busy ? '…' : 'Quitar'}</button>`
+          : `
+            <button class="btn btn-primary sm" data-action="want" data-id="${book.id}" ${busy ? 'disabled' : ''}>
+              ${busy ? '…' : 'Lo quiero'}
+            </button>`}
+        </div>
       </li>`;
   }
 
-  #bar({ selected, saved, isDirty, saving }) {
+  #bar({ selected, busyBookId }) {
     const n = selected.size;
     return `
       <div class="action-bar">
         <div class="bar-info">
-          <strong>${n} ${n === 1 ? 'libro marcado' : 'libros marcados'}</strong>
-          ${isDirty
-            ? `<span class="bar-warn">Cambios sin guardar · <button class="link-btn inline small" data-action="discard" ${saving ? 'disabled' : ''}>Deshacer</button></span>`
-            : saved.size ? '<span class="muted">Todo guardado</span>' : ''}
+          <strong>${n} ${n === 1 ? 'libro en tu lista' : 'libros en tu lista'}</strong>
+          <span class="muted">${n ? 'Se guarda solo' : 'Tocá "Lo quiero" para agregar'}</span>
         </div>
         <div class="bar-buttons">
-          <button class="btn btn-light sm" data-action="save" ${!isDirty || saving ? 'disabled' : ''}>
-            ${saving ? 'Guardando…' : 'Guardar'}
-          </button>
-          <button class="btn btn-primary sm" data-action="matches" ${!n || saving ? 'disabled' : ''}>
+          <button class="btn btn-primary sm" data-action="matches" ${!n || busyBookId ? 'disabled' : ''}>
             Ver quién los tiene →
           </button>
         </div>

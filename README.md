@@ -96,11 +96,10 @@ Archivos: `repositories/OfferRepository.js`, `WantRepository.js` → `models/Sel
 
 ## Busco (#/busco)
 
-La mamá marca, grado por grado, los libros que necesita y toca **Guardar**.
-- La selección es local hasta guardar; al guardar se agregan/quitan solo los cambios (`wants`).
-- Muestra cuántas OTRAS mamás tienen cada libro disponible.
-- "Ver quién los tiene →" guarda lo pendiente y lleva a `#/coincidencias/busco`.
-- Si sale sin guardar y vuelve, conserva lo marcado; al cerrar la pestaña avisa.
+La mamá elige grado y toca **"Lo quiero"** en los libros que necesita (igual que "Lo vendo" en Vendo).
+- Cada click se guarda solo en `wants`; no hay botón Guardar. "Quitar" lo saca de la lista.
+- Muestra cuántos OTROS usuarios tienen cada libro disponible.
+- "Ver quién los tiene →" lleva a `#/coincidencias/busco`.
 
 Archivos: `repositories/WantRepository.js` → `models/SearchModel.js` → `views/SearchView.js` → `controllers/SearchController.js`.
 

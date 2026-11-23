@@ -1,14 +1,10 @@
 import { Model } from '../core/Model.js';
 
 /**
- * "Busco": la mamá marca los libros que necesita y los guarda.
- *
- * Trabaja con una copia local de la selección: marcar/desmarcar no toca la base
- * hasta que toca "Guardar". Ahí se calcula la diferencia y se agregan/quitan solo los cambios.
+ * "Busco" / "Compro": la mamá toca "Lo quiero" en los libros que necesita.
+ * Igual que en Vendo, cada click se guarda solo en la base (no hay botón Guardar).
  */
 export class SearchModel extends Model {
-  #context = null; // "usuaria|escuela" de la última carga
-
   /**
    * @param {object} deps
    * @param {import('../repositories/CatalogRepository.js').CatalogRepository} deps.catalogRepo
@@ -22,12 +18,11 @@ export class SearchModel extends Model {
       grades: [],            // [{ id, name, sort_order, bookCount }]
       gradeId: null,
       books: [],             // libros visibles del grado elegido
-      saved: new Set(),      // ids de libros guardados en la base
-      selected: new Set(),   // ids marcados en pantalla (copia de trabajo)
+      selected: new Set(),   // ids de libros que quiero (guardados en la base)
       gradeOf: {},           // { bookId: gradeId } para contar por pestaña
-      available: {},         // { bookId: cuántas otras mamás lo tienen disponible }
+      available: {},         // { bookId: cuántos otros usuarios lo tienen disponible }
+      busyBookId: null,      // libro que se está guardando
       loading: true,
-      saving: false,
       notice: null,
       error: null,
     });
@@ -36,15 +31,7 @@ export class SearchModel extends Model {
     this.offerRepo = offerRepo;
   }
 
-  /** ¿Hay cambios sin guardar? */
-  get isDirty() {
-    const { saved, selected } = this.state;
-    if (saved.size !== selected.size) return true;
-    for (const id of selected) if (!saved.has(id)) return true;
-    return false;
-  }
-
-  /** Cuántos libros marcados hay en cada grado: { gradeId: cantidad } */
+  /** Cuántos libros quiero en cada grado: { gradeId: cantidad } */
   get selectedByGrade() {
     const { selected, gradeOf } = this.state;
     const counts = {};
@@ -64,20 +51,12 @@ export class SearchModel extends Model {
       const gradeIds = new Set(grades.map(g => g.id));
       const mine = wants.filter(w => gradeIds.has(w.book?.grade_id));
 
-      const saved = new Set(mine.map(w => w.book_id));
-      // Si salió de la pantalla sin guardar, al volver conserva lo que había marcado.
-      const sameContext = this.#context === `${userId}|${schoolId}`;
-      const selected = sameContext && this.isDirty ? new Set(this.state.selected) : new Set(saved);
-      this.#context = `${userId}|${schoolId}`;
-
-      const gradeOf = { ...(sameContext ? this.state.gradeOf : {}), ...Object.fromEntries(mine.map(w => [w.book_id, w.book.grade_id])) };
       const keep = grades.find(g => g.id === this.state.gradeId && counts[g.id]);
       const firstWithBooks = grades.find(g => counts[g.id]);
       this.setState({
         grades: grades.map(g => ({ ...g, bookCount: counts[g.id] ?? 0 })),
-        saved,
-        selected,
-        gradeOf,
+        selected: new Set(mine.map(w => w.book_id)),
+        gradeOf: Object.fromEntries(mine.map(w => [w.book_id, w.book.grade_id])),
         gradeId: (keep ?? firstWithBooks ?? grades[0])?.id ?? null,
       });
       await this.#loadBooks();
@@ -86,7 +65,6 @@ export class SearchModel extends Model {
     }
   }
 
-  /** Cambiar de grado NO pierde lo marcado: la selección es de toda la escuela. */
   async selectGrade(gradeId) {
     this.setState({ gradeId: Number(gradeId), loading: true, notice: null, error: null });
     await this.#loadBooks();
@@ -106,50 +84,41 @@ export class SearchModel extends Model {
     }
   }
 
-  // ---------- Selección ----------
-  toggle(bookId) {
+  // ---------- Lo quiero / Quitar ----------
+  /** "Lo quiero": lo agrega a mi lista y se guarda al instante. */
+  async want(bookId) {
     const id = Number(bookId);
-    const selected = new Set(this.state.selected);
-    selected.has(id) ? selected.delete(id) : selected.add(id);
-    this.setState({ selected, notice: null, error: null });
-  }
-
-  /** Marca todos los del grado; si ya estaban todos, los desmarca. */
-  toggleAllInGrade() {
-    const ids = this.state.books.map(b => b.id);
-    const selected = new Set(this.state.selected);
-    const allOn = ids.length && ids.every(id => selected.has(id));
-    ids.forEach(id => (allOn ? selected.delete(id) : selected.add(id)));
-    this.setState({ selected, notice: null, error: null });
-  }
-
-  /** Vuelve a lo que estaba guardado. */
-  discard() {
-    this.setState({ selected: new Set(this.state.saved), notice: null, error: null });
-  }
-
-  // ---------- Guardar ----------
-  /** @returns {Promise<boolean>} true si quedó todo guardado */
-  async save() {
-    if (!this.isDirty) return true;
-    const { saved, selected, userId } = this.state;
-    const toAdd = [...selected].filter(id => !saved.has(id));
-    const toRemove = [...saved].filter(id => !selected.has(id));
-
-    this.setState({ saving: true, error: null, notice: null });
-    try {
-      await this.wantRepo.add(toAdd);
-      await this.wantRepo.removeMany(userId, toRemove);
+    if (this.state.selected.has(id)) return;
+    await this.#run(id, async () => {
+      await this.wantRepo.add([id]);
+      const book = this.state.books.find(b => b.id === id);
       this.setState({
-        saved: new Set(selected),
-        saving: false,
-        notice: `Guardado: buscás ${selected.size} ${selected.size === 1 ? 'libro' : 'libros'}`,
+        selected: new Set([...this.state.selected, id]),
+        notice: `Agregaste "${book?.title ?? 'el libro'}"`,
       });
-      return true;
+    });
+  }
+
+  /** "Quitar": lo saca de mi lista. */
+  async unwant(bookId) {
+    const id = Number(bookId);
+    if (!this.state.selected.has(id)) return;
+    await this.#run(id, async () => {
+      await this.wantRepo.removeMany(this.state.userId, [id]);
+      const selected = new Set(this.state.selected);
+      selected.delete(id);
+      this.setState({ selected, notice: 'Quitado de tu lista' });
+    });
+  }
+
+  async #run(bookId, fn) {
+    this.setState({ busyBookId: bookId, error: null, notice: null });
+    try {
+      await fn();
     } catch (err) {
       this.#fail(err);
-      this.setState({ saving: false });
-      return false;
+    } finally {
+      this.setState({ busyBookId: null });
     }
   }
 
