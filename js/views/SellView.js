@@ -2,6 +2,7 @@ import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
 import { formatArPhone } from '../utils/phone.js';
 import { bookInfo } from './bookInfo.js';
+import { priceNote } from './priceNote.js';
 
 const STATUS_OPTIONS = [
   { value: 'available', label: 'Disponible' },
@@ -29,6 +30,7 @@ export class SellView extends View {
           <p class="page-lead">Marcá los libros que ya usaron y querés pasar.</p>
         </div>
       </div>
+      ${priceNote()}
 
       ${this.#phoneCard(s)}
 

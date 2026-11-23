@@ -2,6 +2,7 @@ import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
 import { formatPrice } from '../utils/format.js';
 import { bookInfo } from './bookInfo.js';
+import { priceNote } from './priceNote.js';
 
 /**
  * Coincidencias desde Compro: lista de usuarios ordenada por cuántos libros de mi lista tienen.
@@ -21,6 +22,7 @@ export class BuyMatchesView extends View {
           <p class="page-lead">Ordenados por cuántos libros de tu lista tienen, para que le compres lo más posible a la misma persona. Tocá uno para ver el detalle.</p>
         </div>
       </div>
+      ${priceNote()}
       ${s.error ? `<div class="alert" role="alert">${esc(s.error)}</div>` : ''}
       ${this.#body(s)}`;
   }

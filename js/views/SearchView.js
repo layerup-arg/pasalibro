@@ -1,6 +1,7 @@
 import { View } from '../core/View.js';
 import { esc } from '../utils/html.js';
 import { bookInfo } from './bookInfo.js';
+import { priceNote } from './priceNote.js';
 
 /**
  * Pantalla "Busco".
@@ -19,6 +20,7 @@ export class SearchView extends View {
           <p class="page-lead">Tocá "Lo quiero" en los libros que necesitás; se guarda solo. Después te mostramos qué usuario tiene más de tu lista.</p>
         </div>
       </div>
+      ${priceNote()}
 
       ${s.error ? `<div class="alert" role="alert">${esc(s.error)}</div>` : ''}
       ${s.notice ? `<div class="notice" role="status">✓ ${esc(s.notice)}</div>` : ''}

@@ -267,3 +267,4 @@ a.btn{text-decoration:none}
 .btn-wa:disabled{opacity:.7;cursor:progress}
 @media(max-width:480px){.btn-wa{width:100%;justify-content:center}}
 .book-flag{display:inline-block;margin-right:.4rem;font-size:1.05em;line-height:1;vertical-align:-.05em}
+.price-note{display:flex;gap:.5rem;align-items:flex-start;background:#FFF6E0;border:1.5px solid #F2D58A;color:#6B4E00;border-radius:12px;padding:.6rem .85rem;font-size:.88rem;line-height:1.4;margin:0 0 1rem}
